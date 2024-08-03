@@ -7,7 +7,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-black overflow-hidden">
+    <div className="flex min-h-screen flex-col items-center justify-center overflow-hidden">
       <div className="">
         <div className="flex flex-row gap-4">
           <p className="text-5xl opacity-30 text-blue-400 font-mono">
