@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useApi } from "../context/api.context";
 import Spinner from "../components/spinner";
-import ethers from "ethers";
+import { ethers } from "ethers";
 
 export default function GetStartedPage() {
   const { fetchRequest, isGettingStart } = useApi();
@@ -14,7 +14,7 @@ export default function GetStartedPage() {
 
     if (ethers.isAddress(contractAddress)) {
       fetchRequest({
-        url: "/blocksout/get-abi",
+        url: "/build-app",
         method: "POST",
         model: "GettingStart",
         body: {
