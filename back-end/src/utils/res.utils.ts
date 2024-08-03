@@ -13,3 +13,11 @@ export function failed({ res, message = "FAILED", err = "Bad Request", status = 
     error: err,
   });
 };
+
+export function success({ res, message = "OK", status = 200, data }: IResType) {
+  res.status(status).json({
+    message: message,
+    success: true,
+    data
+  });
+};
