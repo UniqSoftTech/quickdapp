@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useAddress } from "@thirdweb-dev/react";
+import ConnectWalletTemplate from "../connection/ConnectWalletTemplate";
 
 function Layout({ children }) {
   const address = useAddress();
@@ -11,7 +12,7 @@ function Layout({ children }) {
           <h1 className="text-xl font-bold text-gray-900">QUICK DAPP</h1>
         </div>
         <div className="flex items-center gap-4">
-          <div>haha</div>
+          <ConnectWalletTemplate address={address} isConnected={!!address} />
         </div>
       </header>
       <main className="container flex-grow p-4 mx-auto text-gray-900">
