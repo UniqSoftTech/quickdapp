@@ -75,8 +75,62 @@ export class FrontendGenerator {
       return { success: false, message: "Error installing dependencies" };
     }
 
+    console.log("Copying template files...");
+    try {
+      copyTemplateFiles(aiOutput.selectedTemplates, projectPath);
+
+      console.log("Template files copied successfully.");
+    } catch (error) {
+      console.error("Error copying template files:", error);
+      process.exit(1);
+    }
+
     // Further steps to generate the frontend (if needed)
     console.log("Frontend generation complete!");
     return { success: true, message: "Frontend generation complete" };
   }
+}
+
+
+function copyTemplateFiles(templates: any, projectPath: string) {
+  const templateDir = path.join(__dirname, "..", "..", "templates");
+  fs.mkdirSync(path.join(projectPath, "src", "components", "common"), { recursive: true });
+  fs.mkdirSync(path.join(projectPath, "src", "components", "erc20"), { recursive: true });
+  fs.mkdirSync(path.join(projectPath, "src", "components", "connection"), {
+    recursive: true,
+  });
+  fs.mkdirSync(path.join(projectPath, "src", "styles"), { recursive: true });
+  fs.mkdirSync(path.join(projectPath, "src", "components", "layout"), { recursive: true });
+
+  templates.forEach((template: Template) => {
+    const sourceFile = path.join(
+      templateDir,
+      template.type,
+      `${template.id.charAt(0).toUpperCase() + template.id.slice(1)}Template.jsx`
+    );
+    const destFile = path.join(
+      projectPath,
+      "src",
+      "components",
+      template.type,
+      `${template.id.charAt(0).toUpperCase() + template.id.slice(1)}Template.jsx`
+    );
+    fs.copyFileSync(sourceFile, destFile);
+  });
+
+  // Copy ThemeToggle.jsx
+  fs.copyFileSync(
+    path.join(templateDir, "common", "ThemeToggle.jsx"),
+    path.join(projectPath, "src", "components", "common", "ThemeToggle.jsx")
+  );
+
+  fs.copyFileSync(
+    path.join(templateDir, "styles", "public.css"),
+    path.join(projectPath, "src", "styles", "public.css")
+  );
+
+  fs.copyFileSync(
+    path.join(templateDir, "layout", "Layout.jsx"),
+    path.join(projectPath, "src", "components", "layout", "Layout.jsx")
+  );
 }
