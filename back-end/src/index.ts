@@ -2,10 +2,10 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import { failed } from './utils/res.utils';
 import routes from './routes/routes';
+import { PORT } from './config/env.config';
 
 
 const app: Express = express();
-const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json({ limit: '1024mb' }));
@@ -19,7 +19,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello from TypeScript Express server!');
 });
 
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
 });
 
