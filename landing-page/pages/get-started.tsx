@@ -9,6 +9,12 @@ export default function GetStartedPage() {
     "0x388C818CA8B9251b393131C08a736A67ccB19297"
   );
 
+  const [webconfig, setWebconfig] = useState({
+    title: "QuickDapp",
+    desc: "QuickDapp is a web3 application builder",
+    theme: "",
+  });
+
   function handleSubmit(e: any) {
     e.preventDefault();
 
@@ -34,6 +40,32 @@ export default function GetStartedPage() {
             className="p-2 border"
             value={contractAddress}
             onChange={(e) => setContractAddress(e.target.value)}
+          />
+
+          <input
+            type="text"
+            placeholder="Enter app title"
+            className="p-2 border"
+            value={webconfig.title}
+            onChange={(e) =>
+              setWebconfig((prev) => ({
+                ...prev,
+                title: e.target.value,
+              }))
+            }
+          />
+
+          <input
+            type="text"
+            placeholder="Enter app title"
+            className="p-2 border"
+            value={webconfig.desc}
+            onChange={(e) =>
+              setWebconfig((prev) => ({
+                ...prev,
+                desc: e.target.value,
+              }))
+            }
           />
 
           <button
