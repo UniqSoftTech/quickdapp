@@ -45,3 +45,41 @@ export const dummyAbi = [
     "type": "event"
   }
 ]
+
+export const dummyAiOutput = {
+  "selectedTemplates": [
+    {
+      "id": "connectWallet",
+      "type": "connection",
+      "props": {}
+    },
+    {
+      "id": "tokenTransfer",
+      "type": "erc20",
+      "props": {
+        "suggestedAmounts": ["10", "100", "1000"]
+      }
+    },
+    {
+      "id": "balanceDisplay",
+      "type": "erc20",
+      "props": {
+        "symbol": "TKN"
+      }
+    },
+    {
+      "id": "eventList",
+      "type": "common",
+      "props": {
+        "eventName": "Transfer"
+      }
+    }
+  ],
+  "layout": "singleColumn",
+  "workflowSequences": [
+    {
+      "name": "Approve and Transfer",
+      "steps": ["tokenApproval", "tokenTransfer"]
+    }
+  ]
+}

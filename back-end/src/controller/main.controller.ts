@@ -1,32 +1,42 @@
+import { dummyAiOutput } from '../utils/dummy-data.utils';
 import { Response, Request } from "express";
-import { success } from "../utils/res.utils";
-import { dummyAbi } from "../utils/dummy-data.utils";
-import { BLOCKSCOUT_URL } from "../config/env.config";
-import { BlocksoutService } from "../serives/blocksout.service";
-import { FrontendGenerator } from "../serives/frontend-generator.service";
-
+import { failed, success } from "../utils/res.utils";
+import { BlocksoutService } from '../serives/blocksout.service';
+import { FrontendGenerator } from '../serives/frontend-generator.service';
 
 export class MainController {
-  private blocksout = new BlocksoutService();
-  private frontendGenerator = new FrontendGenerator();
+  private blocksout: BlocksoutService;
+  private frontendgenerator: FrontendGenerator;
+
+  constructor() {
+    this.blocksout = new BlocksoutService();
+    this.frontendgenerator = new FrontendGenerator();
+    this.buildApp = this.buildApp.bind(this);
+  }
 
   async buildApp(req: Request, res: Response): Promise<void> {
     try {
-      const { contract_address } = req.body
+      const { contract_address } = req.body;
       const abi = await this.blocksout.getABI(contract_address);
 
-      const frontend = await this.frontendGenerator.generateFrontend(
-        "ai-output",
+      const result = await this.frontendgenerator.generateFrontend(
+        dummyAiOutput,
         contract_address,
         abi
       );
 
-      console.log("🚀 ~ MainController ~ buildApp ~ frontend:", frontend)
-
-      return frontend
-
+      success({
+        res,
+        message: "Success",
+        status: 200,
+        result: "success",
+      });
     } catch (error) {
-      throw error
+      failed({
+        res,
+        err: error,
+        status: 500,
+      });
     }
   }
 }
