@@ -70,7 +70,7 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
 
       if (!response.ok) {
         dispatch({ model: modelKey, data: response, type: ACTION.RES });
-        return await response.json();
+        return await response?.json();
       }
 
       const json = await response.json();
