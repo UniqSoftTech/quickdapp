@@ -85,12 +85,21 @@ export class FrontendGenerator {
       process.exit(1);
     }
 
+    // Generate main App component
+    console.log("Generating main App component...");
+    try {
+      generateAppComponent(aiOutput, contractAddress, contractABI, projectPath);
+      console.log("Main App component generated successfully.");
+    } catch (error) {
+      console.error("Error generating main App component:", error);
+      process.exit(1);
+    }
+
     // Further steps to generate the frontend (if needed)
     console.log("Frontend generation complete!");
     return { success: true, message: "Frontend generation complete" };
   }
 }
-
 
 function copyTemplateFiles(templates: any, projectPath: string) {
   const templateDir = path.join(__dirname, "..", "..", "templates");
@@ -133,4 +142,95 @@ function copyTemplateFiles(templates: any, projectPath: string) {
     path.join(templateDir, "layout", "Layout.jsx"),
     path.join(projectPath, "src", "components", "layout", "Layout.jsx")
   );
+}
+
+function generateAppComponent(aiOutput: any, contractAddress: string, contractABI: any, projectPath: string) {
+  const importTemplates = aiOutput.selectedTemplates
+    .map(
+      (t: any) =>
+        `import ${t.id.charAt(0).toUpperCase() + t.id.slice(1)
+        }Template from '../components/${t.type}/${t.id.charAt(0).toUpperCase() + t.id.slice(1)
+        }Template';`
+    )
+    .join("\n");
+
+  const componentTemplates = aiOutput.selectedTemplates
+    .filter((t: any) => t.id !== "connectWallet")
+    .map((t: any) => {
+      if (t.id === "tokenTransfer") {
+        return `
+        <div className="col-span-1">
+        <TokenTransferTemplate
+      onTransfer={async (recipient, amount) => {
+        const contract = getContract();
+        if (contract) {
+          await contract.transfer(recipient, ethers.parseEther(amount));
+        }
+      }}
+      suggestedAmounts={${JSON.stringify(t.props.suggestedAmounts)}}
+    /></div>`;
+      } else if (t.id === "balanceDisplay") {
+        return `<div className="col-span-1"><BalanceDisplayTemplate
+      getBalance={async () => {
+        const contract = getContract();
+        if (contract) {
+          const balance = await contract.balanceOf(account);
+          return ethers.formatEther(balance);
+        }
+        return '0';
+      }}
+      symbol="${t.props.symbol}"
+    /></div>`;
+      } else if (t.id === "eventList") {
+        return `<div className="col-span-1 md:col-span-2"><EventListTemplate
+      getEvents={async () => {
+        const contract = getContract();
+        if (contract) {
+          const filter = contract.filters.Transfer();
+          const events = await contract.queryFilter(filter, -1000);
+          return events.map(event => ({
+            from: event.args.from,
+            to: event.args.to,
+            value: ethers.formatEther(event.args.value)
+          }));
+        }
+        return [];
+      }}
+      eventName="${t.props.eventName}"
+    /></div>`;
+      }
+    })
+    .join("\n          ");
+
+  // Read index.js template and replace placeholders
+  const indexTemplate = fs.readFileSync(
+    path.join(__dirname, "..", "..", "templates", "pages", "index.js"),
+    "utf8"
+  );
+  const indexContent = indexTemplate
+    .replace("${importTemplates}", importTemplates)
+    .replace("${contractABI}", JSON.stringify(contractABI))
+    .replace("${contractAddress}", contractAddress)
+    .replace("${componentTemplates}", componentTemplates);
+
+  // Ensure the 'src/pages' directory exists
+  fs.mkdirSync(path.join(projectPath, "src", "pages"), { recursive: true });
+
+  fs.writeFileSync(path.join(projectPath, "src", "pages", "index.js"), indexContent);
+
+  // Read _app.js template and write it directly
+  const appTemplate = fs.readFileSync(
+    path.join(__dirname, "..", "..", "templates", "pages", "_app.js"),
+    "utf8"
+  );
+  fs.writeFileSync(path.join(projectPath, "src", "pages", "_app.js"), appTemplate);
+
+  // Update tailwind.config.js
+  const tailwindConfigPath = path.join(projectPath, "tailwind.config.js");
+  const tailwindConfig = fs.readFileSync(tailwindConfigPath, "utf8");
+  const updatedTailwindConfig = tailwindConfig.replace(
+    /module.exports = \{/,
+    "module.exports = {\n  darkMode: 'class',"
+  );
+  fs.writeFileSync(tailwindConfigPath, updatedTailwindConfig);
 }
