@@ -3,7 +3,7 @@ import React from "react";
 function DAppContent() {
   return (
     <div className="p-4 App">
-      <div>Welcome</div>
+      <div>This is generated components.</div>
     </div>
   );
 }

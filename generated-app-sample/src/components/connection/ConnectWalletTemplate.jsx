@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ConnectWallet, useDisconnect } from "@thirdweb-dev/react";
 import Image from "next/image";
+import colors from "@/utils/colors";
 
 function ConnectWalletTemplate({ isConnected, address }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -61,8 +62,13 @@ function ConnectWalletTemplate({ isConnected, address }) {
         </>
       ) : (
         <ConnectWallet
-          theme="light"
-          style={{ background: "rgb(59 130 246)", padding: "10px 10px" }}
+          theme="dark"
+          style={{
+            background: colors.main,
+            color: "black",
+            fontWeight: 600,
+            padding: "10px 10px",
+          }}
         />
       )}
     </div>
