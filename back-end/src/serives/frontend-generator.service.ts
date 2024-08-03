@@ -2,11 +2,7 @@ import fs from "fs";
 import { execSync } from "child_process";
 
 export class FrontendGenerator {
-  async generateFrontend(
-    aiOutput: string,
-    contractAddress: string,
-    contractABI: any,
-    // projectName: string
+  async generateFrontend(aiOutput: string, contractAddress: string, contractABI: any,
   ): Promise<void> {
     const projectName = "ai-generated-dapp-next";
 
