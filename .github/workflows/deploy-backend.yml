@@ -29,6 +29,21 @@ jobs:
         cd backend
         zip -r deploy.zip . -x "*.git*" "node_modules/*"
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Check AWS S3 permissions
+      run: |
+        aws s3 ls
+        if [ $? -ne 0 ]; then
+          echo "Error: Unable to list S3 buckets. Please check AWS permissions."
+          exit 1
+        fi
+
     - name: Deploy to AWS Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
       with:
@@ -39,3 +54,12 @@ jobs:
         version_label: ${{ github.sha }}
         region: us-east-1
         deployment_package: backend/deploy.zip
+      continue-on-error: true
+      id: deploy
+
+    - name: Check deployment status
+      if: steps.deploy.outcome == 'failure'
+      run: |
+        echo "Deployment failed. Checking Elastic Beanstalk logs..."
+        aws elasticbeanstalk describe-events --environment-name Quickdapp-env --output text
+        exit 1
