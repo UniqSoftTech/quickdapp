@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - 'backend/**'
+  workflow_dispatch:
+
+env:
+  PORT: ${{ secrets.BACKEND_PORT }}
+  BLOCKSCOUT_URL: ${{ secrets.BLOCKSCOUT_URL }}
 
 jobs:
   deploy:
@@ -63,6 +68,7 @@ jobs:
         version_label: ${{ github.sha }}
         region: us-east-1
         deployment_package: backend/deploy.zip
+        environment_variables: PORT=${{ env.PORT }},BLOCKSCOUT_URL=${{ env.BLOCKSCOUT_URL }}
       continue-on-error: true
       id: deploy
 
