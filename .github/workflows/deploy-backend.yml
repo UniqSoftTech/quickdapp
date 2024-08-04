@@ -29,10 +29,15 @@ jobs:
         cd backend
         npm ci
 
+    - name: Build TypeScript
+      run: |
+        cd backend
+        npm run build
+
     - name: Generate deployment package
       run: |
         cd backend
-        zip -r deploy.zip . -x "*.git*" "node_modules/*"
+        zip -r deploy.zip . -x "*.git*" "node_modules/*" "src/*"
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -40,32 +45,6 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-
-    - name: Check AWS S3 permissions
-      run: |
-        aws s3 ls
-        if [ $? -ne 0 ]; then
-          echo "Error: Unable to list S3 buckets. Please check AWS permissions."
-          exit 1
-        fi
-
-    - name: Check if Elastic Beanstalk application exists
-      run: |
-        if ! aws elasticbeanstalk describe-applications --application-names quickdapp > /dev/null 2>&1; then
-          echo "Application 'quickdapp' not found. Creating it..."
-          aws elasticbeanstalk create-application --application-name quickdapp
-        else
-          echo "Application 'quickdapp' already exists."
-        fi
-
-    - name: Check if Elastic Beanstalk environment exists
-      run: |
-        if ! aws elasticbeanstalk describe-environments --environment-names Quickdapp-env --application-name quickdapp > /dev/null 2>&1; then
-          echo "Environment 'Quickdapp-env' not found. Creating it..."
-          aws elasticbeanstalk create-environment --application-name quickdapp --environment-name Quickdapp-env --solution-stack-name "64bit Amazon Linux 2 v5.8.0 running Node.js 18"
-        else
-          echo "Environment 'Quickdapp-env' already exists."
-        fi
 
     - name: Deploy to AWS Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v22
