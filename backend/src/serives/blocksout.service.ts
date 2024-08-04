@@ -1,14 +1,18 @@
-import { Response, Request } from "express";
-import { success } from "../utils/res.utils";
 import { BLOCKSCOUT_URL } from "../config/env.config";
 
-export class BlocksoutService {
-  async getABI(contract_address: string) {
+export class BlockscoutService {
+  async getABI(contractAddress: string): Promise<any> {
+    const url = `${BLOCKSCOUT_URL}/api?module=contract&action=getabi&address=${contractAddress}`;
+    
     try {
-      return await fetch(`${BLOCKSCOUT_URL}/api?module=contract&action=getabi&address=${contract_address}`).then(contractInfo => contractInfo.json())
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
     } catch (error) {
-      throw error
+      console.error("Error fetching ABI:", error);
+      throw error;
     }
   }
 }
-

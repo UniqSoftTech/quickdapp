@@ -9,7 +9,7 @@ router.get("/", (_req: express.Request, res: express.Response) => {
   success({ res, message: "API is running", status: 200 });
 });
 
-router.post("/build-app", async (req: express.Request, res: express.Response) => {
+router.post("/generate", async (req: express.Request, res: express.Response) => {
   try {
     const result = await mainController.buildApp(req, res);
     success({ res, message: result, status: 200 });
