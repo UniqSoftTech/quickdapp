@@ -34,9 +34,9 @@ jobs:
         cd backend
         npm run build
 
-    - name: Generate deployment package
+    - name: Prepare deployment package
       run: |
-        cd backend/dist
+        cd backend
         zip -r deploy.zip .
 
     - name: Configure AWS credentials
@@ -55,7 +55,7 @@ jobs:
         environment_name: prod
         version_label: ${{ github.sha }}
         region: us-east-1
-        deployment_package: backend/dist/deploy.zip
+        deployment_package: backend/deploy.zip
         environment_variables: PORT=${{ env.PORT }},BLOCKSCOUT_URL=${{ env.BLOCKSCOUT_URL }}
         use_existing_version_if_available: true
 
