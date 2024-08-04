@@ -58,29 +58,11 @@ jobs:
           echo "Application 'quickdapp' already exists."
         fi
 
-    - name: Check and create Elastic Beanstalk environment
+    - name: Check if Elastic Beanstalk environment exists
       run: |
-        if [ -z "$(aws elasticbeanstalk describe-environments --environment-names Quickdapp-env --application-name quickdapp --query 'Environments[0].EnvironmentName' --output text)" ]; then
+        if ! aws elasticbeanstalk describe-environments --environment-names Quickdapp-env --application-name quickdapp > /dev/null 2>&1; then
           echo "Environment 'Quickdapp-env' not found. Creating it..."
-          aws elasticbeanstalk create-environment \
-            --application-name quickdapp \
-            --environment-name Quickdapp-env \
-            --solution-stack-name "64bit Amazon Linux 2 v5.8.0 running Node.js 20" \
-            --option-settings \
-              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PORT,Value=${{ env.PORT }} \
-              Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ env.BLOCKSCOUT_URL }}
-          
-          # Wait for the environment to be ready
-          echo "Waiting for environment to be ready..."
-          aws elasticbeanstalk wait environment-exists --environment-names Quickdapp-env --application-name quickdapp
-          
-          # Check if environment creation was successful
-          if [ $? -ne 0 ]; then
-            echo "Failed to create environment. Check AWS console for more details."
-            exit 1
-          fi
-          
-          echo "Environment created successfully."
+          aws elasticbeanstalk create-environment --application-name quickdapp --environment-name Quickdapp-env --solution-stack-name "64bit Amazon Linux 2 v5.8.0 running Node.js 20"
         else
           echo "Environment 'Quickdapp-env' already exists."
         fi
@@ -104,7 +86,6 @@ jobs:
           --version-label ${{ github.sha }}
 
         # Wait for the deployment to complete
-        echo "Waiting for deployment to complete..."
         aws elasticbeanstalk wait environment-updated \
           --application-name quickdapp \
           --environment-name Quickdapp-env
@@ -117,12 +98,17 @@ jobs:
 
         if [ "$HEALTH_STATUS" != "Green" ]; then
           echo "Deployment failed. Environment health status: $HEALTH_STATUS"
-          echo "Recent events:"
-          aws elasticbeanstalk describe-events --environment-name Quickdapp-env --max-items 10
           exit 1
         fi
 
-        echo "Deployment completed successfully."
+    - name: Set environment variables
+      run: |
+        aws elasticbeanstalk update-environment \
+          --application-name quickdapp \
+          --environment-name Quickdapp-env \
+          --option-settings \
+            Namespace=aws:elasticbeanstalk:application:environment,OptionName=PORT,Value=${{ env.PORT }} \
+            Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ env.BLOCKSCOUT_URL }}
 
     - name: Check deployment status
       if: steps.deploy.outcome == 'failure'
