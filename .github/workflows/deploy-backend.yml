@@ -1,0 +1,41 @@
+name: Deploy Backend to AWS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm ci
+
+    - name: Generate deployment package
+      run: |
+        cd backend
+        zip -r deploy.zip . -x "*.git*" "node_modules/*"
+
+    - name: Deploy to AWS Elastic Beanstalk
+      uses: einaregilsson/beanstalk-deploy@v21
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: quickdapp
+        environment_name: Quickdapp-env
+        version_label: ${{ github.sha }}
+        region: us-east-1
+        deployment_package: back-end/deploy.zip
