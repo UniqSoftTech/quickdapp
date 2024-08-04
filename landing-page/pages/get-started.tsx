@@ -20,7 +20,7 @@ export default function GetStartedPage() {
 
     if (ethers.isAddress(contractAddress)) {
       fetchRequest({
-        url: "/build-app",
+        url: "/generate",
         method: "POST",
         model: "GettingStart",
         body: {
