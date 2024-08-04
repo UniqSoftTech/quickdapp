@@ -12,7 +12,7 @@ router.get("/", (_req: express.Request, res: express.Response) => {
 router.post("/generate", async (req: express.Request, res: express.Response) => {
   try {
     const result = await mainController.buildApp(req, res);
-    success({ res, message: result, status: 200 });
+    success({ res, message: 'Operation successful', status: 200 });
   } catch (error) {
     failed({ res, err: "Failed to build app", status: 500 });
   }
