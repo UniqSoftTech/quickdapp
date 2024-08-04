@@ -58,6 +58,15 @@ jobs:
           echo "Application 'quickdapp' already exists."
         fi
 
+    - name: Check if Elastic Beanstalk environment exists
+      run: |
+        if ! aws elasticbeanstalk describe-environments --environment-names Quickdapp-env --application-name quickdapp > /dev/null 2>&1; then
+          echo "Environment 'Quickdapp-env' not found. Creating it..."
+          aws elasticbeanstalk create-environment --application-name quickdapp --environment-name Quickdapp-env --solution-stack-name "64bit Amazon Linux 2 v5.8.0 running Node.js 18"
+        else
+          echo "Environment 'Quickdapp-env' already exists."
+        fi
+
     - name: Deploy to AWS Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v22
       with:
@@ -70,8 +79,6 @@ jobs:
         deployment_package: backend/deploy.zip
         environment_variables: PORT=${{ env.PORT }},BLOCKSCOUT_URL=${{ env.BLOCKSCOUT_URL }}
         use_existing_version_if_available: true
-      continue-on-error: true
-      id: deploy
 
     - name: Check deployment status
       if: steps.deploy.outcome == 'failure'
