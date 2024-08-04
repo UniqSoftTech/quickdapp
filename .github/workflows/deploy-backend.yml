@@ -55,7 +55,7 @@ jobs:
         environment_name: prod
         version_label: ${{ github.sha }}
         region: us-east-1
-        deployment_package: backend/deploy.zip
+        deployment_package: backend/dist/deploy.zip
         environment_variables: PORT=${{ env.PORT }},BLOCKSCOUT_URL=${{ env.BLOCKSCOUT_URL }}
         use_existing_version_if_available: true
 
