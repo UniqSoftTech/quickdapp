@@ -44,6 +44,15 @@ jobs:
           exit 1
         fi
 
+    - name: Check if Elastic Beanstalk application exists
+      run: |
+        if ! aws elasticbeanstalk describe-applications --application-names quickdapp > /dev/null 2>&1; then
+          echo "Application 'quickdapp' not found. Creating it..."
+          aws elasticbeanstalk create-application --application-name quickdapp
+        else
+          echo "Application 'quickdapp' already exists."
+        fi
+
     - name: Deploy to AWS Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
       with:
