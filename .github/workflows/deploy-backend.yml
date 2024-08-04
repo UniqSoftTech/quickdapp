@@ -38,4 +38,4 @@ jobs:
         environment_name: Quickdapp-env
         version_label: ${{ github.sha }}
         region: us-east-1
-        deployment_package: back-end/deploy.zip
+        deployment_package: backend/deploy.zip
