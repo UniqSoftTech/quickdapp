@@ -36,11 +36,8 @@ jobs:
 
     - name: Generate deployment package
       run: |
-        cd backend
-        zip -r deploy.zip . -x "*.git*" "node_modules/*" "src/*"
-        zip -ur deploy.zip dist
-        ls -la  # Add this line to list directory contents
-        cat deploy.zip || true  # Add this line to attempt to display zip contents
+        cd backend/dist
+        zip -r deploy.zip .
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
