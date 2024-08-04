@@ -34,12 +34,12 @@ export class FrontendGenerator {
     try {
       await this.createProjectDirectory(generateDir, projectName);
       const projectPath = path.join(generateDir, projectName);
-      
+
       await this.createNextJsApp(projectPath);
       await this.installDependencies(projectPath);
       await this.copyTemplateFiles(aiOutput.selectedTemplates, projectPath);
       await this.generateAppComponent(aiOutput, contractAddress, contractABI, projectPath);
-      
+
       console.log("Frontend generation complete!");
       return { success: true, message: "Frontend generation complete" };
     } catch (error) {
@@ -93,6 +93,7 @@ export class FrontendGenerator {
       recursive: true,
     });
     fs.mkdirSync(path.join(projectPath, "src", "styles"), { recursive: true });
+    fs.mkdirSync(path.join(projectPath, "src", "utils"), { recursive: true });
     fs.mkdirSync(path.join(projectPath, "src", "components", "layout"), { recursive: true });
 
     templates.forEach((template: Template) => {
@@ -125,6 +126,16 @@ export class FrontendGenerator {
     fs.copyFileSync(
       path.join(templateDir, "layout", "Layout.jsx"),
       path.join(projectPath, "src", "components", "layout", "Layout.jsx")
+    );
+
+    fs.copyFileSync(
+      path.join(templateDir, "utils", "colors.js"),
+      path.join(projectPath, "src", "utils", "colors.js")
+    );
+
+    fs.copyFileSync(
+      path.join(templateDir, "utils", "logo.svg"),
+      path.join(projectPath, "public", "logo.svg")
     );
   }
 
@@ -217,5 +228,12 @@ export class FrontendGenerator {
       "module.exports = {\n  darkMode: 'class',"
     );
     fs.writeFileSync(tailwindConfigPath, updatedTailwindConfig);
+
+    const srcAppPath = path.join("src", "app");
+    if (fs.existsSync(srcAppPath)) {
+      console.log("Removing src/app directory...");
+      fs.rmSync(srcAppPath, { recursive: true, force: true });
+      console.log("src/app directory removed successfully.");
+    }
   }
 }
