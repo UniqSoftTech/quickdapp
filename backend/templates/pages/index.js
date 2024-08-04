@@ -24,11 +24,6 @@ function DAppContent() {
     }
   };
 
-  const getContract = () => {
-    if (!library || !account) return null;
-    return new ethers.Contract(contractAddress, contractABI, library.getSigner());
-  };
-
   return (
     <div className="p-4 App">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
