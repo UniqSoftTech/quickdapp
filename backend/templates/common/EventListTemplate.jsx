@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useContract, useContractEvents } from "@thirdweb-dev/react";
 
-function EventListTemplate({ getEvents, eventName }) {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const newEvents = await getEvents();
-      setEvents(newEvents);
-      setLoading(false);
-    };
-    fetchEvents();
-  }, [getEvents]);
+function EventListTemplate({ contractAddress, eventName }) {
+  const { contract } = useContract(contractAddress);
+  const { data: events, isLoading } = useContractEvents(contract, "Transfer");
 
   return (
-    <div className="max-w-2xl p-6 mx-auto rounded-lg shadow-lg bg-gray-50 dark:bg-gray-800">
+    <div className="p-6 mx-auto rounded-lg shadow-lg bg-gray-50 dark:bg-gray-800">
       <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-gray-100">
         {eventName} Events
       </h2>
-      {loading ? (
+      {isLoading ? (
         <p className="text-gray-700 dark:text-gray-300">Loading...</p>
-      ) : events.length > 0 ? (
+      ) : events && events.length > 0 ? (
         <ul className="space-y-4">
           {events.map((event, index) => (
             <li

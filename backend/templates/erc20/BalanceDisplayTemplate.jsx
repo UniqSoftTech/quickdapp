@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from "react";
+import { useAddress, useBalance } from "@thirdweb-dev/react";
+import { formatBalance } from "@/utils/functions";
 
-function BalanceDisplayTemplate({ getBalance, symbol }) {
-  const [balance, setBalance] = useState("0");
-
-  useEffect(() => {
-    const fetchBalance = async () => {
-      const newBalance = await getBalance();
-      setBalance(newBalance);
-    };
-    fetchBalance();
-  }, [getBalance]);
+function BalanceDisplayTemplate({ symbol = "ethereum" }) {
+  const address = useAddress();
+  const { data: balance, isLoading: isBalanceLoading } = useBalance();
 
   return (
-    <div className="p-6 rounded-lg shadow-lg bg-gray-50 dark:bg-gray-800">
-      <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-gray-100">
-        Balance
-      </h2>
-      <p className="text-xl text-gray-700 dark:text-gray-300">
-        {balance} <span className="font-semibold">{symbol}</span>
-      </p>
+    <div className="flex flex-row flex-wrap items-center gap-2 p-3 bg-neutral-950 rounded-xl">
+      <p className="text-gray-400">Balance:</p>
+      {isBalanceLoading ? (
+        <div role="status" className="max-w-sm animate-pulse">
+          <h3 className="w-24 h-6 bg-gray-300 rounded-full"></h3>
+        </div>
+      ) : (
+        <p className="font-semibold text-gray-400 text-gray-700 dark:text-gray-300">
+          {formatBalance(balance?.displayValue)} {balance?.symbol}
+        </p>
+      )}
     </div>
   );
 }
