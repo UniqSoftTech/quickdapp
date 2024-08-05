@@ -44,7 +44,7 @@ export class FrontendGenerator {
       return { success: true, message: "Frontend generation complete" };
     } catch (error) {
       console.error("Error during frontend generation:", error);
-      return { success: false, message: (error as Error).message };
+      throw new Error(`Error during frontend generation: ${(error as Error).message}`);
     }
   }
 
