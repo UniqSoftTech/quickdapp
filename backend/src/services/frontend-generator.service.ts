@@ -166,31 +166,30 @@ export class FrontendGenerator {
       /></div>`;
         } else if (t.id === "balanceDisplay") {
           return `<div className="col-span-1"><BalanceDisplayTemplate
-        getBalance={async () => {
-          const contract = getContract();
-          if (contract) {
-            const balance = await contract.balanceOf(account);
-            return ethers.formatEther(balance);
-          }
-          return '0';
-        }}
+          getBalance={async () => {
+            if (contract) {
+              const balance = await contract.call("balanceOf", [address]);
+              return balance.toString();
+            }
+            return "0";
+          }}
         symbol="${t.props.symbol}"
       /></div>`;
         } else if (t.id === "eventList") {
           return `<div className="col-span-1 md:col-span-2"><EventListTemplate
-        getEvents={async () => {
-          const contract = getContract();
-          if (contract) {
-            const filter = contract.filters.Transfer();
-            const events = await contract.queryFilter(filter, -1000);
-            return events.map(event => ({
-              from: event.args.from,
-              to: event.args.to,
-              value: ethers.formatEther(event.args.value)
-            }));
-          }
-          return [];
-        }}
+          getEvents={async () => {
+            if (contract) {
+              const events = await contract.events.getAllEvents({
+                eventName: "Transfer",
+              });
+              return events.map((event) => ({
+                from: event.data.from,
+                to: event.data.to,
+                value: event.data.value.toString(),
+              }));
+            }
+            return [];
+          }}
         eventName="${t.props.eventName}"
       /></div>`;
         }

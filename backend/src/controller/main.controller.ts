@@ -16,7 +16,8 @@ export class MainController {
   async buildApp(req: Request, res: Response): Promise<void> {
     try {
       const { contract_address } = req.body;
-      const abi = await this.blocksoutService.getABI(contract_address);
+      const abiResponse = await this.blocksoutService.getABI(contract_address);
+      const abi = JSON.parse(abiResponse.result); // Parse the ABI string to an object
 
       const result = await this.frontendGeneratorService.generateFrontend(
         dummyAiOutput,
