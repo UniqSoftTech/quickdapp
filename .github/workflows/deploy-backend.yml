@@ -63,7 +63,6 @@ jobs:
         aws elasticbeanstalk update-environment \
           --environment-name prod \
           --option-settings \
-            Namespace=aws:elasticbeanstalk:application:environment,OptionName=PORT,Value=${{ secrets.BACKEND_PORT }} \
             Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ secrets.BLOCKSCOUT_URL }}
 
     - name: Check deployment status
