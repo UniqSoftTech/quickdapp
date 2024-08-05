@@ -1,12 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ConnectWallet, useDisconnect } from "@thirdweb-dev/react";
+import blockies from "ethereum-blockies";
 import Image from "next/image";
 import colors from "@/utils/colors";
+import Modal from "../common/Modal";
 
 function ConnectWalletTemplate({ isConnected, address }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const disconnect = useDisconnect();
+
+  const formatAddress = (address) => {
+    return `${address.substring(0, 6)}...${address.substring(
+      address.length - 4,
+    )}`;
+  };
+
+  const generateIdenticon = (address) => {
+    return blockies.create({ seed: address }).toDataURL();
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -36,9 +48,18 @@ function ConnectWalletTemplate({ isConnected, address }) {
         <>
           <button
             onClick={toggleDropdown}
-            className="flex items-center gap-2 px-2 py-2 overflow-hidden border border-gray-600 rounded-xl"
+            className="flex items-center gap-2 px-2 py-2 overflow-hidden border border-gray-600 bg-neutral-700 rounded-xl"
           >
-            <p className="text-black dark:text-white">{address}</p>
+            <Image
+              src={generateIdenticon(address)}
+              alt="identicon"
+              width={24}
+              height={24}
+              className="object-contain w-6 h-6 rounded-full"
+            />
+            <p className="text-white dark:text-black">
+              {formatAddress(address)}
+            </p>
           </button>
           {dropdownOpen && (
             <div
@@ -62,11 +83,11 @@ function ConnectWalletTemplate({ isConnected, address }) {
         </>
       ) : (
         <ConnectWallet
-          theme="dark"
+          theme="light"
+          modalTitle="QuickDapp"
           style={{
             background: colors.main,
             color: "black",
-            fontWeight: 600,
             padding: "10px 10px",
           }}
         />
