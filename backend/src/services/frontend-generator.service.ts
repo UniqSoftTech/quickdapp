@@ -154,6 +154,10 @@ export class FrontendGenerator {
     );
 
     fs.copyFileSync(
+      path.join(templateDir, "utils", "functions.js"),
+      path.join(projectPath, "src", "utils", "functions.js")
+    );
+    fs.copyFileSync(
       path.join(templateDir, "utils", "logo.svg"),
       path.join(projectPath, "public", "logo.svg")
     );
@@ -235,15 +239,27 @@ export class FrontendGenerator {
     );
     fs.writeFileSync(path.join(projectPath, "src", "pages", "_app.js"), appTemplate);
 
-    // Update tailwind.config.js
-    const tailwindConfigPath = path.join(projectPath, "tailwind.config.js");
-    const tailwindConfig = fs.readFileSync(tailwindConfigPath, "utf8");
-    const updatedTailwindConfig = tailwindConfig.replace(
-      /module.exports = \{/,
-      "module.exports = {\n  darkMode: 'class',"
-    );
+    const sourceSwapFilePath = path.join(__dirname, "..", "..", "templates", "pages", "swap.js");
+    const targetSwapFilePath = path.join(projectPath, "src", "pages", "swap.js");
+    const targetSwapDir = path.dirname(targetSwapFilePath);
+    if (!fs.existsSync(targetSwapDir)) {
+      fs.mkdirSync(targetSwapDir, { recursive: true });
+    }
+    fs.copyFileSync(sourceSwapFilePath, targetSwapFilePath);
 
-    fs.writeFileSync(tailwindConfigPath, updatedTailwindConfig);
+    const sourceTransferFilePath = path.join(__dirname, "..", "..", "templates", "pages", "transfer.js");
+    const targetTransferFilePath = path.join(projectPath, "src", "pages", "transfer.js");
+    const targetTransferDir = path.dirname(targetTransferFilePath);
+    if (!fs.existsSync(targetTransferDir)) {
+      fs.mkdirSync(targetTransferDir, { recursive: true });
+    }
+    fs.copyFileSync(sourceTransferFilePath, targetTransferFilePath);
+
+    // Update tailwind.config.js
+    const sourceTailwindConfigPath = path.join(__dirname, "..", "..", "templates", "utils", "tailwind.config.js");
+    const targetTailwindConfigPath = path.join(projectPath, 'tailwind.config.js');
+    const customTailwindConfig = fs.readFileSync(sourceTailwindConfigPath, 'utf8');
+    fs.writeFileSync(targetTailwindConfigPath, customTailwindConfig);
 
     const srcAppPath = path.join("src", "app");
     if (fs.existsSync(srcAppPath)) {
