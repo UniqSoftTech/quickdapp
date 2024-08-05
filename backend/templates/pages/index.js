@@ -16,23 +16,11 @@ function DAppContent() {
   const disconnect = useDisconnect();
   const { contract } = useContract(contractAddress);
 
-  const connectWallet = async () => {
-    try {
-      await activate(injectedConnector);
-    } catch (error) {
-      console.error("Failed to connect wallet:", error);
-    }
-  };
-
   return (
-    <div className="p-4 App">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      {
-        <>
-          ${componentTemplates}
-        </>
-      }
-      </div>
+    <div className="flex items-center justify-center md:pt-20">
+      <TokenTransferTemplate
+        suggestedAmounts={["10", "100", "1000"]}
+      />
     </div>
   );
 }

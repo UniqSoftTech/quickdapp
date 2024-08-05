@@ -3,9 +3,7 @@ import Image from "next/image";
 import { useAddress } from "@thirdweb-dev/react";
 import ConnectWalletTemplate from "../connection/ConnectWalletTemplate";
 import Logo from "../../../public/logo.svg";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import Link from "next/link";
 
 function Layout({ children }) {
   const address = useAddress();
@@ -14,6 +12,17 @@ function Layout({ children }) {
       <header className="flex items-center justify-between w-full px-6 py-3 bg-neutral-900">
         <div className="flex items-center gap-3">
           <Image src={Logo} className="object-contain w-40 h-14" alt="Logo" />
+          <nav className="flex items-center gap-4 ml-6">
+            <Link href="/" passHref>
+              <p className="text-white hover:text-gray-400">Transfer</p>
+            </Link>
+            <Link href="/swap" passHref>
+              <p className="text-white hover:text-gray-400">Swap</p>
+            </Link>
+            <Link href="/transfer" passHref>
+              <p className="text-white hover:text-gray-400">Transfer History</p>
+            </Link>
+          </nav>
         </div>
         <div className="flex items-center gap-4">
           <ConnectWalletTemplate address={address} isConnected={!!address} />
