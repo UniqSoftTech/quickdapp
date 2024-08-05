@@ -1,12 +1,15 @@
 import { AppProps } from "next/app";
 import "../styles/globals.css";
 import { ApiProvider } from "../context/api.context";
+import { ToastProvider } from "../context/toast.context";
 
 function App({ Component, pageProps }: AppProps) {
   return (
-    <ApiProvider>
-      <Component {...pageProps} />
-    </ApiProvider>
+    <ToastProvider>
+      <ApiProvider>
+        <Component {...pageProps} />
+      </ApiProvider>
+    </ToastProvider>
   );
 }
 
