@@ -12,7 +12,7 @@ router.get("/", (_req: express.Request, res: express.Response) => {
   success({ res, message: "API is running", status: 200 });
 });
 
-router.post("/generate", mainController.buildApp);
+router.post("/generate", mainController.buildApp.bind(mainController));
 router.post("/contract/get-metadata", contractController.getMetaData.bind(contractController));
 
 export default router;
