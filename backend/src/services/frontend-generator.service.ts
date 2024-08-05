@@ -238,19 +238,11 @@ export class FrontendGenerator {
     // Update tailwind.config.js
     const tailwindConfigPath = path.join(projectPath, "tailwind.config.js");
     const tailwindConfig = fs.readFileSync(tailwindConfigPath, "utf8");
-    const darkModeConfig = `darkMode: "class",\n`;
-    const newColorConfig = `
-      colors: {
-        primary: {
-          DEFAULT: "#FBCD51",
-        },
-      },`;
-    const updatedTailwindConfig = tailwindConfig
-      .replace(/module.exports = \{/, `module.exports = {\n  ${darkModeConfig}`)
-      .replace(
-        /theme: \{([\s\S]*?)\n\s+\},/,
-        `theme: {$1\n    extend: {\n${newColorConfig}    },\n  },`
-      );
+    const updatedTailwindConfig = tailwindConfig.replace(
+      /module.exports = \{/,
+      "module.exports = {\n  darkMode: 'class',"
+    );
+
     fs.writeFileSync(tailwindConfigPath, updatedTailwindConfig);
 
     const srcAppPath = path.join("src", "app");
