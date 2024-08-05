@@ -9,7 +9,7 @@ const mainController = new MainController();
 const contractController = new ContractController();
 
 router.get("/", (_req: express.Request, res: express.Response) => {
-  success({ res, message: "API is running", status: 200 });
+  success({ res, message: "OK", status: 200 });
 });
 
 router.post("/generate", mainController.buildApp.bind(mainController));
