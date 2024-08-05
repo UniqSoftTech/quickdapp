@@ -119,6 +119,21 @@ export class FrontendGenerator {
     );
 
     fs.copyFileSync(
+      path.join(templateDir, "common", "Button.jsx"),
+      path.join(projectPath, "src", "components", "common", "Button.jsx")
+    );
+
+    fs.copyFileSync(
+      path.join(templateDir, "common", "Modal.jsx"),
+      path.join(projectPath, "src", "components", "common", "Modal.jsx")
+    );
+
+    fs.copyFileSync(
+      path.join(templateDir, "common", "SearchInput.jsx"),
+      path.join(projectPath, "src", "components", "common", "SearchInput.jsx")
+    );
+
+    fs.copyFileSync(
       path.join(templateDir, "styles", "public.css"),
       path.join(projectPath, "src", "styles", "public.css")
     );
@@ -167,10 +182,6 @@ export class FrontendGenerator {
         } else if (t.id === "balanceDisplay") {
           return `<div className="col-span-1"><BalanceDisplayTemplate
           getBalance={async () => {
-            if (contract) {
-              const balance = await contract.call("balanceOf", [address]);
-              return balance.toString();
-            }
             return "0";
           }}
         symbol="${t.props.symbol}"
@@ -185,7 +196,7 @@ export class FrontendGenerator {
               return events.map((event) => ({
                 from: event.data.from,
                 to: event.data.to,
-                value: event.data.value.toString(),
+                value: event.data.value?.toString(),
               }));
             }
             return [];
