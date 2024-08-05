@@ -4,7 +4,7 @@ export default function Home() {
   const router = useRouter();
 
   function onGetStarted() {
-    router.push("/generate");
+    router.push("/get-started");
   }
 
   return (
