@@ -6,7 +6,7 @@ interface IResType {
   err?: any;
 }
 
-export function failed({ res, message = "FAILED", err = "Bad Request", status = 400 }: IResType) {
+export function failed({ res, message = "FAILED", err = "Internal Server Error", status = 500 }: IResType) {
   res.status(status).json({
     message: message,
     success: false,
