@@ -1,14 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ConnectWallet, useDisconnect } from "@thirdweb-dev/react";
+import {
+  ConnectWallet,
+  useDisconnect,
+  useWallet,
+  useBalance,
+  useAddress,
+} from "@thirdweb-dev/react";
 import blockies from "ethereum-blockies";
 import Image from "next/image";
 import colors from "@/utils/colors";
-import Modal from "../common/Modal";
 
-function ConnectWalletTemplate({ isConnected, address }) {
+const formatBalance = (balance, decimals = 4) => {
+  if (!balance) return "0.0000";
+  const parts = balance.split(".");
+  if (parts.length > 1) {
+    return `${parts[0]}.${parts[1].substring(0, decimals)}`;
+  }
+  return balance;
+};
+
+function ConnectWalletTemplate() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const disconnect = useDisconnect();
+  const wallet = useWallet();
+  const address = useAddress();
+  const { data: balance, isLoading: isBalanceLoading } = useBalance();
 
   const formatAddress = (address) => {
     return `${address.substring(0, 6)}...${address.substring(
@@ -44,22 +61,29 @@ function ConnectWalletTemplate({ isConnected, address }) {
 
   return (
     <div className="relative flex items-center gap-2">
-      {isConnected ? (
+      {address ? (
         <>
           <button
             onClick={toggleDropdown}
-            className="flex items-center gap-2 px-2 py-2 overflow-hidden border border-gray-600 bg-neutral-700 rounded-xl"
+            className="flex items-center gap-2 px-2 py-1 overflow-hidden bg-neutral-950 rounded-2xl"
           >
-            <Image
-              src={generateIdenticon(address)}
-              alt="identicon"
-              width={24}
-              height={24}
-              className="object-contain w-6 h-6 rounded-full"
-            />
-            <p className="text-white dark:text-black">
-              {formatAddress(address)}
+            <p className="text-base font-semibold text-gray-400">
+              {isBalanceLoading
+                ? "Loading..."
+                : `${formatBalance(balance?.displayValue)} ${balance?.symbol}`}
             </p>
+            <div className="flex flex-row flex-wrap items-center gap-2 p-2 bg-neutral-800 rounded-2xl">
+              <p className="text-sm font-semibold text-white dark:text-black">
+                {formatAddress(address)}
+              </p>
+              <Image
+                src={generateIdenticon(address)}
+                alt="identicon"
+                width={5}
+                height={5}
+                className="object-contain w-4 h-4 rounded-full"
+              />
+            </div>
           </button>
           {dropdownOpen && (
             <div
