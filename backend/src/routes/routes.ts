@@ -10,5 +10,6 @@ const contractController = new ContractController();
 
 router.post("/generate", mainController.buildApp.bind(mainController));
 router.post("/contract/get-metadata", contractController.getMetaData.bind(contractController));
+router.get("/contract/top-tokens", contractController.getTopTokens.bind(contractController));
 
 export default router;

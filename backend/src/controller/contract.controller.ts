@@ -1,4 +1,4 @@
-import { dummyAiOutput } from '../utils/dummy-data.utils';
+import { dummyAiOutput, topTokens } from '../utils/dummy-data.utils';
 import { Response, Request } from "express";
 import { failed, success } from "../utils/res.utils";
 import { ethers } from "ethers"
@@ -26,6 +26,15 @@ export class ContractController {
       success({ res, result })
     } catch (error: Error | any) {
       failed({ res, err: error, message: `Failed to get metadata for contract ${req.body.address}` });
+    }
+  }
+
+
+  async getTopTokens(req: Request, res: Response): Promise<void> {
+    try {
+      success({ res, result: topTokens });
+    } catch (error: Error | any) {
+      failed({ res, err: error, message: `Failed to get top tokens` });
     }
   }
 }
