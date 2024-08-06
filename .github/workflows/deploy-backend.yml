@@ -28,11 +28,6 @@ jobs:
     - name: Install dependencies
       run: |
         cd backend
-        if [ ! -f package-lock.json ]; then
-          npm install
-          git add package-lock.json
-          git commit -m "Generate package-lock.json"
-        fi
         npm ci
 
     - name: Build TypeScript
@@ -69,7 +64,7 @@ jobs:
         aws elasticbeanstalk update-environment \
           --environment-name prod \
           --option-settings \
-            Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ secrets.BLOCKSCOUT_URL }},OptionName=ALCHEMY_APP_API_KEY,Value=${{ secrets.ALCHEMY_APP_API_KEY }}
+            Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ secrets.BLOCKSCOUT_URL }}
 
     - name: Check deployment status
       if: steps.deploy.outcome == 'failure'
