@@ -87,14 +87,20 @@ export class FrontendGenerator {
 
   private copyTemplateFiles(templates: any, projectPath: string) {
     const templateDir = path.join(__dirname, "..", "..", "templates");
-    fs.mkdirSync(path.join(projectPath, "src", "components", "common"), { recursive: true });
-    fs.mkdirSync(path.join(projectPath, "src", "components", "erc20"), { recursive: true });
-    fs.mkdirSync(path.join(projectPath, "src", "components", "connection"), {
-      recursive: true,
+
+    const directoriesToCreate = [
+      "src/components/common",
+      "src/components/erc20",
+      "src/components/connection",
+      "src/styles",
+      "src/utils",
+      "src/components/layout",
+      "src/components/display"
+    ];
+
+    directoriesToCreate.forEach((dir) => {
+      fs.mkdirSync(path.join(projectPath, dir), { recursive: true });
     });
-    fs.mkdirSync(path.join(projectPath, "src", "styles"), { recursive: true });
-    fs.mkdirSync(path.join(projectPath, "src", "utils"), { recursive: true });
-    fs.mkdirSync(path.join(projectPath, "src", "components", "layout"), { recursive: true });
 
     templates.forEach((template: Template) => {
       const sourceFile = path.join(
@@ -112,55 +118,42 @@ export class FrontendGenerator {
       fs.copyFileSync(sourceFile, destFile);
     });
 
-    // Copy ThemeToggle.jsx
-    fs.copyFileSync(
-      path.join(templateDir, "common", "ThemeToggle.jsx"),
-      path.join(projectPath, "src", "components", "common", "ThemeToggle.jsx")
-    );
+    // Copy individual files
+    const filesToCopy = [
+      { src: "common/SwapTemplate.jsx", dest: "src/components/common/SwapTemplate.jsx" },
+      { src: "common/StakeTemplate.jsx", dest: "src/components/common/StakeTemplate.jsx" },
+      { src: "styles/public.css", dest: "src/styles/public.css" },
+      { src: "layout/Layout.jsx", dest: "src/components/layout/Layout.jsx" },
+      { src: "utils/colors.js", dest: "src/utils/colors.js" },
+      { src: "utils/functions.js", dest: "src/utils/functions.js" },
+      { src: "utils/logo.svg", dest: "public/logo.svg" },
+    ];
 
-    fs.copyFileSync(
-      path.join(templateDir, "common", "Button.jsx"),
-      path.join(projectPath, "src", "components", "common", "Button.jsx")
-    );
+    filesToCopy.forEach(({ src, dest }) => {
+      fs.copyFileSync(path.join(templateDir, src), path.join(projectPath, dest));
+    });
 
-    fs.copyFileSync(
-      path.join(templateDir, "common", "Modal.jsx"),
-      path.join(projectPath, "src", "components", "common", "Modal.jsx")
-    );
+    // Copy display templates
+    const displaySourceDir = path.join(templateDir, "display");
+    const displayDestDir = path.join(projectPath, "src", "components", "display");
+    this.copyDirectoryRecursive(displaySourceDir, displayDestDir);
+  }
 
-    fs.copyFileSync(
-      path.join(templateDir, "common", "SearchInput.jsx"),
-      path.join(projectPath, "src", "components", "common", "SearchInput.jsx")
-    );
+  private copyDirectoryRecursive(source: string, destination: string) {
+    if (!fs.existsSync(destination)) {
+      fs.mkdirSync(destination, { recursive: true });
+    }
 
-    fs.copyFileSync(
-      path.join(templateDir, "common", "SwapTemplate.jsx"),
-      path.join(projectPath, "src", "components", "common", "SwapTemplate.jsx")
-    );
+    fs.readdirSync(source, { withFileTypes: true }).forEach((entry) => {
+      const sourcePath = path.join(source, entry.name);
+      const destPath = path.join(destination, entry.name);
 
-    fs.copyFileSync(
-      path.join(templateDir, "styles", "public.css"),
-      path.join(projectPath, "src", "styles", "public.css")
-    );
-
-    fs.copyFileSync(
-      path.join(templateDir, "layout", "Layout.jsx"),
-      path.join(projectPath, "src", "components", "layout", "Layout.jsx")
-    );
-
-    fs.copyFileSync(
-      path.join(templateDir, "utils", "colors.js"),
-      path.join(projectPath, "src", "utils", "colors.js")
-    );
-
-    fs.copyFileSync(
-      path.join(templateDir, "utils", "functions.js"),
-      path.join(projectPath, "src", "utils", "functions.js")
-    );
-    fs.copyFileSync(
-      path.join(templateDir, "utils", "logo.svg"),
-      path.join(projectPath, "public", "logo.svg")
-    );
+      if (entry.isDirectory()) {
+        this.copyDirectoryRecursive(sourcePath, destPath);
+      } else {
+        fs.copyFileSync(sourcePath, destPath);
+      }
+    });
   }
 
   private generateAppComponent(aiOutput: any, contractAddress: string, contractABI: any, projectPath: string) {
