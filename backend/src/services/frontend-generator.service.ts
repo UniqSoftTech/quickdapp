@@ -29,6 +29,8 @@ export class FrontendGenerator {
     contractABI: any,
     title: string,
     description: string,
+    theme: string,
+    logo: string,
   ): Promise<{ success: boolean; message: string }> {
     //Replace space with the - and make title lower case
     const sanitizedTitle = title.toLowerCase().replace(/\s+/g, '-');

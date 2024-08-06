@@ -54,7 +54,7 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
     try {
       dispatch({ model: modelKey, type: ACTION.REQ });
 
-      const response = await fetch("https://quickdapp.us-east-1.elasticbeanstalk.com/api" + url, {
+      const response = await fetch("http://localhost:3001/api" + url, {
         method: method,
         mode: "cors",
         body: JSON.stringify(body),
@@ -70,7 +70,7 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
 
       if (!response.ok) {
         dispatch({ model: modelKey, data: response, type: ACTION.RES });
-        return await response?.json?.();
+        return await response?.message || response;
       }
 
       const json = await response.json();

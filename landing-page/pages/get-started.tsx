@@ -23,6 +23,7 @@ export default function GetStartedPage() {
     desc: "QuickDapp is a web3 application builder",
     theme: "",
     logo: "",
+    color: "#000000",
   });
 
   async function handleSubmitContractAddress(e: any) {
@@ -51,6 +52,10 @@ export default function GetStartedPage() {
       model: "GettingStart",
       body: {
         contract_address: contractAddress,
+        title: generalConfig.title,
+        description: generalConfig.desc,
+        theme: generalConfig.theme,
+        logo: generalConfig.logo,
       },
     });
 
@@ -139,6 +144,20 @@ export default function GetStartedPage() {
                   setGeneralConfig((prev) => ({
                     ...prev,
                     logo: e.target.value,
+                  }))
+                }
+              />
+
+              <label className="text-white">Primary color:</label>
+              <input
+                type="color"
+                placeholder="Enter logo URL"
+                className="w-full"
+                color={generalConfig.color}
+                onChange={(e) =>
+                  setGeneralConfig((prev) => ({
+                    ...prev,
+                    color: e.target.value,
                   }))
                 }
               />

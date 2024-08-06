@@ -15,7 +15,7 @@ export class MainController {
 
   async buildApp(req: Request, res: Response): Promise<void> {
     try {
-      const { contract_address, title, description } = req.body;
+      const { contract_address, title, description, theme, logo } = req.body;
       const abiResponse = await this.blocksoutService.getABI(contract_address);
       const abi = JSON.parse(abiResponse.result); // Parse the ABI string to an object
 
@@ -24,7 +24,9 @@ export class MainController {
         contract_address,
         abi,
         title,
-        description
+        description,
+        theme,
+        logo,
       );
 
       success({

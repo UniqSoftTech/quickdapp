@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ethers } from "ethers";
 
 export default function AddressInput({
   disabled = false,
@@ -11,11 +12,15 @@ export default function AddressInput({
   placeholder?: string;
 }) {
   const [value, setValue] = useState<string>("");
+  const [err, setErr] = useState<boolean>(false);
 
   useEffect(() => {
-    if (value.length === 42) {
-      onChange(value);
+    if (value.length === 42 && ethers.isAddress(value)) {
+      setErr(false);
+      return onChange(value);
     }
+
+    return setErr(true);
   }, [value]);
 
   return (
@@ -30,7 +35,9 @@ export default function AddressInput({
         disabled={disabled}
         placeholder={placeholder}
         onChange={(e) => setValue(e.target.value)}
-        className="block w-full px-4 py-2 text-sm font-normal shadow-xs text-gray-900 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none leading-relaxed"
+        className={`block w-full px-4 py-2 text-sm font-normal shadow-xs text-gray-900 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none leading-relaxed ${
+          err && "border-red-500"
+        }`}
       />
     </div>
   );
