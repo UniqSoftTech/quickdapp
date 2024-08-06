@@ -3,24 +3,40 @@ import {
   CurrencyPoundIcon,
 } from "@heroicons/react/24/outline";
 import React, { useState, useEffect } from "react";
-import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
+import SearchInput from "../display/SearchInput";
 import Button from "../display/Button";
 import Modal from "../display/Modal";
-import SearchInput from "../display/SearchInput";
 
 function SwapTemplate({ getEvents, eventName }) {
   const [visible, setVisible] = useState(false);
+  const [selectedType, setSelectedType] = useState(1);
 
   return (
-    <div className="flex flex-col w-full max-w-xl gap-5 p-6 rounded-3xl bg-neutral-950">
-      <div className="text-xl font-semibold">Swap a token</div>
+    <div className="flex flex-col w-full max-w-xl gap-5 p-6 bg-neutral-950 rounded-3xl">
+      <div className="grid grid-cols-3 bg-neutral-900 rounded-xl">
+        {stakeTypes.map((i) => {
+          return (
+            <button
+              key={i.id}
+              className={`px-4 py-2 rounded-xl font-bold ${
+                i.id === selectedType
+                  ? "bg-primary text-black"
+                  : "text-neutral-600"
+              }`}
+              onClick={() => setSelectedType(i.id)}
+            >
+              <p>{i.name}</p>
+            </button>
+          );
+        })}
+      </div>
       <div className="flex flex-col gap-3">
-        <div className="relative flex flex-col max-w-full gap-3 p-4 bg-neutral-800 rounded-xl">
-          <h2 className="text-neutral-500">Sell</h2>
+        <div className="flex flex-col max-w-full gap-3 p-4 bg-neutral-800 rounded-xl">
+          <h2 className="text-neutral-500">Stake</h2>
           <div className="flex items-center w-full gap-2">
             <button
               onClick={() => setVisible(true)}
-              className="flex items-center flex-shrink-0 gap-2 px-2 py-1 bg-neutral-700 rounded-xl hover:bg-primary hover:text-black"
+              className="flex items-center flex-shrink-0 gap-2 px-2 py-1 bg-neutral-700 hover:bg-primary hover:text-black rounded-xl"
             >
               <p>Select token</p>
               <ChevronDownIcon className="w-5 h-5" />
@@ -34,30 +50,19 @@ function SwapTemplate({ getEvents, eventName }) {
           <div className="flex justify-end">
             <p className="text-neutral-500">~ 0.0$</p>
           </div>
-          <div className="absolute bottom-[-30px] flex items-center justify-center left-0 right-0">
-            <button className="p-3 text-white border rounded-full bg-neutral-950 hover:text-black border-neutral-800 hover:bg-primary">
-              <ArrowsUpDownIcon className="w-6 h-6" />
-            </button>
-          </div>
         </div>
-        <div className="flex flex-col max-w-full gap-3 p-4 mb-4 bg-neutral-800 rounded-xl">
-          <h2 className="text-neutral-500">Sell</h2>
-          <div className="flex items-center w-full gap-2">
-            <button
-              onClick={() => setVisible(true)}
-              className="flex items-center flex-shrink-0 gap-2 px-2 py-1 bg-neutral-700 rounded-xl hover:bg-primary hover:text-black"
-            >
-              <p>ETH</p>
-              <ChevronDownIcon className="w-5 h-5" />
-            </button>
-            <input
-              className="flex-grow w-full min-w-0 text-2xl font-semibold text-right bg-transparent outline-none"
-              placeholder="0"
-              style={{ direction: "ltr" }}
-            />
+        <div className="flex flex-col max-w-full gap-3 p-4 mb-4 border bg-neutral-950 border-neutral-700 rounded-xl">
+          <div className="flex flex-wrap justify-between">
+            <h2>You will get</h2>
+            <h2>0.2 ETH</h2>
           </div>
-          <div className="flex justify-end">
-            <p className="text-neutral-500">~ 0.0$</p>
+          <div className="flex flex-wrap justify-between text-neutral-400">
+            <h2>Exchange rate</h2>
+            <h2>1 ETHx = 1.4385289 ETH</h2>
+          </div>
+          <div className="flex flex-wrap justify-between text-neutral-400">
+            <h2>Transaction cost</h2>
+            <h2>$ 0.54</h2>
           </div>
         </div>
         <Button title={"Swap"} />
@@ -103,4 +108,18 @@ function SwapTemplate({ getEvents, eventName }) {
   );
 }
 
+const stakeTypes = [
+  {
+    id: 1,
+    name: "Stake",
+  },
+  {
+    id: 2,
+    name: "Unstake",
+  },
+  {
+    id: 3,
+    name: "Withdraw",
+  },
+];
 export default SwapTemplate;
