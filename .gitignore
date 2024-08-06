@@ -129,4 +129,3 @@ dist
 .yarn/install-state.gz
 .pnp.*
 back-end/ai-generated-dapp-next/*
-package-lock.json
