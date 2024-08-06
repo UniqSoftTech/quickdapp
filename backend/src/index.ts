@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", routes);
 app.get('/', (req: Request, res: Response) => success({ res, message: "OK", result: new Date() }));
-app.use((err: any, req: any, res: any, next: any) => failed({ res, err, status: 500, message: "Internal Server Error" }));
+app.use((err: any, req: any, res: any, next: any) => failed({ res, err }));
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
