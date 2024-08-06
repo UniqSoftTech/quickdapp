@@ -142,12 +142,12 @@ export class FrontendGenerator {
     const displayDestDir = path.join(projectPath, "src", "components", "display");
     this.copyDirectoryRecursive(displaySourceDir, displayDestDir);
 
-    // Modify SEOHead.jsx
+    // Modify Head.jsx
     this.modifySEOHead(projectPath, title, description);
   }
 
   private modifySEOHead(projectPath: string, title: string, description: string) {
-    const seoHeadPath = path.join(projectPath, "src", "components", "layout", "SEOHead.jsx");
+    const seoHeadPath = path.join(projectPath, "src", "components", "display", "Head.jsx");
     let content = fs.readFileSync(seoHeadPath, "utf8");
 
     content = content.replace(/title = "QuickDapp"/, `title = "${title}"`);
