@@ -4,7 +4,7 @@ import Toast from "@/component/toast";
 
 type ToastContextType = {
   showToast: (
-    message: string,
+    message?: string,
     type?: "success" | "error" | "info" | "loading",
     duration?: number
   ) => void;
@@ -25,8 +25,8 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
   >([]);
 
   const showToast = (
-    message: string,
-    type: "success" | "error" | "info" = "info",
+    message: string = "",
+    type: "success" | "error" | "info" | 'loading' = "info",
     duration: number = 3000
   ) => {
     const id = Date.now();
