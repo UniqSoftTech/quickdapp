@@ -8,10 +8,6 @@ const router = express.Router();
 const mainController = new MainController();
 const contractController = new ContractController();
 
-router.get("/", (_req: express.Request, res: express.Response) => {
-  success({ res, message: "OK", status: 200 });
-});
-
 router.post("/generate", mainController.buildApp.bind(mainController));
 router.post("/contract/get-metadata", contractController.getMetaData.bind(contractController));
 
