@@ -15,14 +15,16 @@ export class MainController {
 
   async buildApp(req: Request, res: Response): Promise<void> {
     try {
-      const { contract_address } = req.body;
+      const { contract_address, title, description } = req.body;
       const abiResponse = await this.blocksoutService.getABI(contract_address);
       const abi = JSON.parse(abiResponse.result); // Parse the ABI string to an object
 
       const result = await this.frontendGeneratorService.generateFrontend(
         dummyAiOutput,
         contract_address,
-        abi
+        abi,
+        title,
+        description
       );
 
       success({

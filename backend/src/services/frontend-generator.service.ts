@@ -26,9 +26,13 @@ export class FrontendGenerator {
   async generateFrontend(
     aiOutput: AiOutput,
     contractAddress: string,
-    contractABI: any
+    contractABI: any,
+    title: string,
+    description: string,
   ): Promise<{ success: boolean; message: string }> {
-    const projectName = "ai-generated-dapp-next";
+    //Replace space with the - and make title lower case
+    const sanitizedTitle = title.toLowerCase().replace(/\s+/g, '-');
+    const projectName = sanitizedTitle;
     const generateDir = path.join(__dirname, "..", "..", "generate");
 
     try {
@@ -37,7 +41,7 @@ export class FrontendGenerator {
 
       await this.createNextJsApp(projectPath);
       await this.installDependencies(projectPath);
-      await this.copyTemplateFiles(aiOutput.selectedTemplates, projectPath);
+      await this.copyTemplateFiles(aiOutput.selectedTemplates, projectPath, title, description);
       await this.generateAppComponent(aiOutput, contractAddress, contractABI, projectPath);
 
       console.log("Frontend generation complete!");
@@ -85,7 +89,7 @@ export class FrontendGenerator {
     }
   }
 
-  private copyTemplateFiles(templates: any, projectPath: string) {
+  private copyTemplateFiles(templates: any, projectPath: string, title: string, description: string) {
     const templateDir = path.join(__dirname, "..", "..", "templates");
 
     const directoriesToCreate = [
@@ -137,6 +141,19 @@ export class FrontendGenerator {
     const displaySourceDir = path.join(templateDir, "display");
     const displayDestDir = path.join(projectPath, "src", "components", "display");
     this.copyDirectoryRecursive(displaySourceDir, displayDestDir);
+
+    // Modify SEOHead.jsx
+    this.modifySEOHead(projectPath, title, description);
+  }
+
+  private modifySEOHead(projectPath: string, title: string, description: string) {
+    const seoHeadPath = path.join(projectPath, "src", "components", "layout", "SEOHead.jsx");
+    let content = fs.readFileSync(seoHeadPath, "utf8");
+
+    content = content.replace(/title = "QuickDapp"/, `title = "${title}"`);
+    content = content.replace(/description = "Generate your web3 website"/, `description = "${description}"`);
+
+    fs.writeFileSync(seoHeadPath, content, "utf8");
   }
 
   private copyDirectoryRecursive(source: string, destination: string) {
