@@ -54,17 +54,21 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
     try {
       dispatch({ model: modelKey, type: ACTION.REQ });
 
-      const response = await fetch("https://quickdapp.us-east-1.elasticbeanstalk.com/api/" + url, {
-        method: method,
-        mode: "cors",
-        body: JSON.stringify(body),
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Authorization:
-            token || state.resaccesstoken || localStorage.getItem("token"),
-          "Access-Control-Allow-Origin": "*",
-        }),
-      }).catch((err) => {
+      const response = await fetch(
+        "https://quickdapp.us-east-1.elasticbeanstalk.com/api" + url,
+        {
+          method: method,
+          mode: "cors",
+          body: JSON.stringify(body),
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Authorization:
+              token || state.resaccesstoken || localStorage.getItem("token"),
+            "Access-Control-Allow-Origin": "*",
+            secure: "false",
+          }),
+        }
+      ).catch((err) => {
         return err;
       });
 
