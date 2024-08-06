@@ -64,7 +64,7 @@ jobs:
         aws elasticbeanstalk update-environment \
           --environment-name prod \
           --option-settings \
-            Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ secrets.BLOCKSCOUT_URL }}\
+            Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ secrets.BLOCKSCOUT_URL }} \
             Namespace=aws:elasticbeanstalk:application:environment,OptionName=ALCHEMY_APP_API_KEY,Value=${{ secrets.ALCHEMY_APP_API_KEY }}
 
     - name: Check deployment status
