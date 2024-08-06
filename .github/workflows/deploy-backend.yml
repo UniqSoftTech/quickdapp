@@ -11,7 +11,6 @@ on:
 env:
   PORT: ${{ secrets.BACKEND_PORT }}
   BLOCKSCOUT_URL: ${{ secrets.BLOCKSCOUT_URL }}
-  ALCHEMY_APP_API_KEY: ${{ secrets.ALCHEMY_APP_API_KEY }}
 
 jobs:
   deploy:
@@ -64,7 +63,7 @@ jobs:
         aws elasticbeanstalk update-environment \
           --environment-name prod \
           --option-settings \
-            Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ secrets.BLOCKSCOUT_URL }},OptionName=ALCHEMY_APP_API_KEY,Value=${{ secrets.ALCHEMY_APP_API_KEY }}
+            Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ secrets.BLOCKSCOUT_URL }}
 
     - name: Check deployment status
       if: steps.deploy.outcome == 'failure'
