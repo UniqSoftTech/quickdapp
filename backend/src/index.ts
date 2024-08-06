@@ -4,7 +4,6 @@ import { failed, success } from './utils/res.utils';
 import routes from './routes/routes';
 import { PORT } from './config/env.config';
 
-
 const app: Express = express();
 
 app.use(cors());
