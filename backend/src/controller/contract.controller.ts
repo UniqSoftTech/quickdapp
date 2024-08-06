@@ -25,7 +25,7 @@ export class ContractController {
       const result = await this.alchemyService.getTokenMetadata(address, network);
       success({ res, result })
     } catch (error: Error | any) {
-      failed({ res, err: error, message: "Failed to get metadata" });
+      failed({ res, err: error, message: `Failed to get metadata for contract ${req.body.address}` });
     }
   }
 }
