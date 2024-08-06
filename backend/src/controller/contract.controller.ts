@@ -50,7 +50,7 @@ export class ContractController {
       if(!ethers.isAddress(address))
         return failed({ res, message: "Invalid address" });
 
-      const result = await this.blocksoutService.getABI(address);
+      const result = await this.blocksoutService.getABI(address).then((res) => JSON.parse(res.result));
       success({ res, result });
     } catch (error: Error | any) {
       failed({ res, err: error, message: `Failed to get ABI for contract ${req.body.address}` });
