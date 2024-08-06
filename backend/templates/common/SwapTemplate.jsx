@@ -73,7 +73,10 @@ function SwapTemplate({ getEvents, eventName }) {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {[1, 2, 3, 4]?.map((i) => {
               return (
-                <button className="flex flex-row flex-wrap items-center gap-3 p-2 bg-neutral-900 rounded-xl">
+                <button
+                  key={i}
+                  className="flex flex-row flex-wrap items-center gap-3 p-2 bg-neutral-900 rounded-xl"
+                >
                   <CurrencyPoundIcon className="w-8 h-8" />
                   <div className="text-left">
                     <h2>ETH</h2>
