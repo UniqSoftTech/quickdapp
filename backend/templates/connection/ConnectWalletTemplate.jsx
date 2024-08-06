@@ -26,7 +26,6 @@ function ConnectWalletTemplate() {
   const wallet = useWallet();
   const address = useAddress();
   const { data: balance, isLoading: isBalanceLoading } = useBalance();
-
   const formatAddress = (address) => {
     return `${address.substring(0, 6)}...${address.substring(
       address.length - 4,
@@ -65,13 +64,17 @@ function ConnectWalletTemplate() {
         <>
           <button
             onClick={toggleDropdown}
-            className="flex items-center gap-2 px-2 py-1 overflow-hidden bg-neutral-950 rounded-2xl"
+            className="flex flex-col items-center gap-2 px-2 py-1 overflow-hidden md:flex-row bg-neutral-950 rounded-2xl"
           >
-            <p className="text-base font-semibold text-gray-400">
-              {isBalanceLoading
-                ? "Loading..."
-                : `${formatBalance(balance?.displayValue)} ${balance?.symbol}`}
-            </p>
+            {isBalanceLoading ? (
+              <div role="status" className="max-w-sm animate-pulse">
+                <h3 className="w-24 h-6 bg-gray-300 rounded-full"></h3>
+              </div>
+            ) : (
+              <p className="text-base font-semibold text-gray-400">
+                {formatBalance(balance?.displayValue)} {balance?.symbol}
+              </p>
+            )}
             <div className="flex flex-row flex-wrap items-center gap-2 p-2 bg-neutral-800 rounded-2xl">
               <p className="text-sm font-semibold text-white dark:text-black">
                 {formatAddress(address)}

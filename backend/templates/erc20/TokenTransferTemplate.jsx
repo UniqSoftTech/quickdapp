@@ -2,16 +2,54 @@ import {
   ChevronDownIcon,
   CurrencyPoundIcon,
 } from "@heroicons/react/24/outline";
-import React, { useState, useEffect } from "react";
-import Button from "../common/Button";
-import Modal from "../common/Modal";
-import SearchInput from "../common/SearchInput";
+import React, { useState } from "react";
+import Button from "../display/Button";
+import blockies from "ethereum-blockies";
+import Image from "next/image";
+import { useContract } from "@thirdweb-dev/react";
+import { ethers } from "ethers";
 
-function TokenTransferTemplate({ onTransfer, suggestedAmounts }) {
+function TokenTransferTemplate({ suggestedAmounts, contractAddress }) {
   const [visible, setVisible] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [recipient, setRecipient] = useState("");
+  const { contract } = useContract(contractAddress, "erc20");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const generateIdenticon = (address) => {
+    return blockies.create({ seed: address }).toDataURL();
+  };
+
+  const handleTransfer = async () => {
+    if (!recipient) {
+      setError("Recipient address is required");
+      return;
+    }
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      setError("Valid amount is required");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    try {
+      const transferAmount = ethers.utils.parseUnits(amount, 18);
+      await contract.call("transfer", {
+        to: recipient,
+        amount: transferAmount,
+      });
+      console.log("Transfer successful");
+    } catch (err) {
+      console.error("Transfer failed", err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div className="flex flex-col w-full max-w-xl gap-5 p-6 border rounded-3xl border-neutral-700">
+    <div className="flex flex-col w-full max-w-xl gap-5 p-6 rounded-3xl bg-neutral-950">
       <div className="text-xl font-semibold">Transfer Token</div>
       <div className="flex flex-col gap-3">
         <div className="flex flex-col max-w-full gap-3 p-4 bg-neutral-800 rounded-xl">
@@ -19,9 +57,20 @@ function TokenTransferTemplate({ onTransfer, suggestedAmounts }) {
           <div className="flex items-center w-full gap-2">
             <input
               className="flex-grow w-full min-w-0 text-2xl font-semibold text-right bg-transparent outline-none"
-              placeholder="0"
+              placeholder="0x0..."
+              value={recipient}
+              onChange={(e) => setRecipient(e.target.value)}
               style={{ direction: "ltr" }}
             />
+            {recipient && (
+              <Image
+                src={generateIdenticon(recipient)}
+                alt="identicon"
+                width={32}
+                height={32}
+                className="object-contain w-8 h-8 rounded-full"
+              />
+            )}
           </div>
         </div>
         <div className="flex flex-col max-w-full gap-3 p-4 bg-neutral-800 rounded-xl">
@@ -30,25 +79,36 @@ function TokenTransferTemplate({ onTransfer, suggestedAmounts }) {
             <input
               className="flex-grow w-full min-w-0 text-2xl font-semibold text-right bg-transparent outline-none"
               placeholder="0"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
               style={{ direction: "ltr" }}
             />
           </div>
         </div>
         {Array.isArray(suggestedAmounts) && suggestedAmounts.length > 0 && (
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-2 mt-2 mb-4">
             {suggestedAmounts.map((suggestedAmount, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => setAmount(suggestedAmount.toString())}
-                className="px-2 py-1 bg-gray-200 rounded-lg bg-neutral-950"
+                className="px-2 py-1 bg-gray-200 rounded-lg bg-neutral-800"
               >
                 {suggestedAmount}
               </button>
             ))}
           </div>
         )}
-        <Button title={"Transfer"} />
+        <Button
+          title={"Transfer"}
+          disabled={!recipient || !amount}
+          onClick={() => handleTransfer()}
+        />
+        {error && (
+          <div className="p-2 border border-red-900 bg-neutral-800 rounded-xl">
+            <p className="text-sm text-white">Transfer failed: {error}</p>
+          </div>
+        )}
       </div>
     </div>
   );
