@@ -26,17 +26,11 @@ export class MainController {
       );
 
       success({
-        res,
-        message: "Frontend generated successfully",
-        status: 200,
-        result,
+        res, message: "Frontend generated successfully", status: 200, result,
       });
     } catch (error) {
       failed({
-        res,
-        err: error,
-        status: 500,
-        message: "Failed to generate frontend",
+        res, err: error, status: 500, message: "Failed to generate frontend",
       });
     }
   }
