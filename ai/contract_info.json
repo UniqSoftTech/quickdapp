@@ -1,0 +1,610 @@
+{
+  "protocolName": "ExampleProtocol",
+  "chain": "base",
+  "contracts": [
+    {
+      "name": "ERC1967Proxy",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_logic",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_data",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "previousAdmin",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "newAdmin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminChanged",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "beacon",
+              "type": "address"
+            }
+          ],
+          "name": "BeaconUpgraded",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "implementation",
+              "type": "address"
+            }
+          ],
+          "name": "Upgraded",
+          "type": "event"
+        },
+        {
+          "stateMutability": "payable",
+          "type": "fallback"
+        },
+        {
+          "stateMutability": "payable",
+          "type": "receive"
+        }
+      ],
+      "isVerified": true,
+      "sourceCode": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v4.7.0) (proxy/ERC1967/ERC1967Proxy.sol)\n\npragma solidity ^0.8.0;\n\nimport \"../Proxy.sol\";\nimport \"./ERC1967Upgrade.sol\";\n\n/**\n * @dev This contract implements an upgradeable proxy. It is upgradeable because calls are delegated to an\n * implementation address that can be changed. This address is stored in storage in the location specified by\n * https://eips.ethereum.org/EIPS/eip-1967[EIP1967], so that it doesn't conflict with the storage layout of the\n * implementation behind the proxy.\n */\ncontract ERC1967Proxy is Proxy, ERC1967Upgrade {\n    /**\n     * @dev Initializes the upgradeable proxy with an initial implementation specified by `_logic`.\n     *\n     * If `_data` is nonempty, it's used as data in a delegate call to `_logic`. This will typically be an encoded\n     * function call, and allows initializing the storage of the proxy like a Solidity constructor.\n     */\n    constructor(address _logic, bytes memory _data) payable {\n        _upgradeToAndCall(_logic, _data, false);\n    }\n\n    /**\n     * @dev Returns the current implementation address.\n     */\n    function _implementation() internal view virtual override returns (address impl) {\n        return ERC1967Upgrade._getImplementation();\n    }\n}\n",
+      "implementation": {
+        "name": "SimpleAccount",
+        "abi": [
+          {
+            "inputs": [
+              {
+                "internalType": "contract IEntryPoint",
+                "name": "anEntryPoint",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "previousAdmin",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "newAdmin",
+                "type": "address"
+              }
+            ],
+            "name": "AdminChanged",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "beacon",
+                "type": "address"
+              }
+            ],
+            "name": "BeaconUpgraded",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "version",
+                "type": "uint8"
+              }
+            ],
+            "name": "Initialized",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "contract IEntryPoint",
+                "name": "entryPoint",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              }
+            ],
+            "name": "SimpleAccountInitialized",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "implementation",
+                "type": "address"
+              }
+            ],
+            "name": "Upgraded",
+            "type": "event"
+          },
+          {
+            "inputs": [],
+            "name": "addDeposit",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "entryPoint",
+            "outputs": [
+              {
+                "internalType": "contract IEntryPoint",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "dest",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "func",
+                "type": "bytes"
+              }
+            ],
+            "name": "execute",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address[]",
+                "name": "dest",
+                "type": "address[]"
+              },
+              {
+                "internalType": "bytes[]",
+                "name": "func",
+                "type": "bytes[]"
+              }
+            ],
+            "name": "executeBatch",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "getDeposit",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "getNonce",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "anOwner",
+                "type": "address"
+              }
+            ],
+            "name": "initialize",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "bytes",
+                "name": "",
+                "type": "bytes"
+              }
+            ],
+            "name": "onERC1155BatchReceived",
+            "outputs": [
+              {
+                "internalType": "bytes4",
+                "name": "",
+                "type": "bytes4"
+              }
+            ],
+            "stateMutability": "pure",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "",
+                "type": "bytes"
+              }
+            ],
+            "name": "onERC1155Received",
+            "outputs": [
+              {
+                "internalType": "bytes4",
+                "name": "",
+                "type": "bytes4"
+              }
+            ],
+            "stateMutability": "pure",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "",
+                "type": "bytes"
+              }
+            ],
+            "name": "onERC721Received",
+            "outputs": [
+              {
+                "internalType": "bytes4",
+                "name": "",
+                "type": "bytes4"
+              }
+            ],
+            "stateMutability": "pure",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "proxiableUUID",
+            "outputs": [
+              {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes4",
+                "name": "interfaceId",
+                "type": "bytes4"
+              }
+            ],
+            "name": "supportsInterface",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "",
+                "type": "bytes"
+              }
+            ],
+            "name": "tokensReceived",
+            "outputs": [],
+            "stateMutability": "pure",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "newImplementation",
+                "type": "address"
+              }
+            ],
+            "name": "upgradeTo",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "newImplementation",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "name": "upgradeToAndCall",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "components": [
+                  {
+                    "internalType": "address",
+                    "name": "sender",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "nonce",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "bytes",
+                    "name": "initCode",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "bytes",
+                    "name": "callData",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "callGasLimit",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "verificationGasLimit",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "preVerificationGas",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "maxFeePerGas",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "maxPriorityFeePerGas",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "bytes",
+                    "name": "paymasterAndData",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "bytes",
+                    "name": "signature",
+                    "type": "bytes"
+                  }
+                ],
+                "internalType": "struct UserOperation",
+                "name": "userOp",
+                "type": "tuple"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "userOpHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "missingAccountFunds",
+                "type": "uint256"
+              }
+            ],
+            "name": "validateUserOp",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "validationData",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address payable",
+                "name": "withdrawAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+              }
+            ],
+            "name": "withdrawDepositTo",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "stateMutability": "payable",
+            "type": "receive"
+          }
+        ],
+        "sourceCode": "// SPDX-License-Identifier: GPL-3.0\npragma solidity ^0.8.12;\n\n/* solhint-disable avoid-low-level-calls */\n/* solhint-disable no-inline-assembly */\n/* solhint-disable reason-string */\n\nimport \"@openzeppelin/contracts/utils/cryptography/ECDSA.sol\";\nimport \"@openzeppelin/contracts/proxy/utils/Initializable.sol\";\nimport \"@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol\";\n\nimport \"../core/BaseAccount.sol\";\nimport \"./callback/TokenCallbackHandler.sol\";\n\n/**\n  * minimal account.\n  *  this is sample minimal account.\n  *  has execute, eth handling methods\n  *  has a single signer that can send requests through the entryPoint.\n  */\ncontract SimpleAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {\n    using ECDSA for bytes32;\n\n    address public owner;\n\n    IEntryPoint private immutable _entryPoint;\n\n    event SimpleAccountInitialized(IEntryPoint indexed entryPoint, address indexed owner);\n\n    modifier onlyOwner() {\n        _onlyOwner();\n        _;\n    }\n\n    /// @inheritdoc BaseAccount\n    function entryPoint() public view virtual override returns (IEntryPoint) {\n        return _entryPoint;\n    }\n\n\n    // solhint-disable-next-line no-empty-blocks\n    receive() external payable {}\n\n    constructor(IEntryPoint anEntryPoint) {\n        _entryPoint = anEntryPoint;\n        _disableInitializers();\n    }\n\n    function _onlyOwner() internal view {\n        //directly from EOA owner, or through the account itself (which gets redirected through execute())\n        require(msg.sender == owner || msg.sender == address(this), \"only owner\");\n    }\n\n    /**\n     * execute a transaction (called directly from owner, or by entryPoint)\n     */\n    function execute(address dest, uint256 value, bytes calldata func) external {\n        _requireFromEntryPointOrOwner();\n        _call(dest, value, func);\n    }\n\n    /**\n     * execute a sequence of transactions\n     */\n    function executeBatch(address[] calldata dest, bytes[] calldata func) external {\n        _requireFromEntryPointOrOwner();\n        require(dest.length == func.length, \"wrong array lengths\");\n        for (uint256 i = 0; i < dest.length; i++) {\n            _call(dest[i], 0, func[i]);\n        }\n    }\n\n    /**\n     * @dev The _entryPoint member is immutable, to reduce gas consumption.  To upgrade EntryPoint,\n     * a new implementation of SimpleAccount must be deployed with the new EntryPoint address, then upgrading\n      * the implementation by calling `upgradeTo()`\n     */\n    function initialize(address anOwner) public virtual initializer {\n        _initialize(anOwner);\n    }\n\n    function _initialize(address anOwner) internal virtual {\n        owner = anOwner;\n        emit SimpleAccountInitialized(_entryPoint, owner);\n    }\n\n    // Require the function call went through EntryPoint or owner\n    function _requireFromEntryPointOrOwner() internal view {\n        require(msg.sender == address(entryPoint()) || msg.sender == owner, \"account: not Owner or EntryPoint\");\n    }\n\n    /// implement template method of BaseAccount\n    function _validateSignature(UserOperation calldata userOp, bytes32 userOpHash)\n    internal override virtual returns (uint256 validationData) {\n        bytes32 hash = userOpHash.toEthSignedMessageHash();\n        if (owner != hash.recover(userOp.signature))\n            return SIG_VALIDATION_FAILED;\n        return 0;\n    }\n\n    function _call(address target, uint256 value, bytes memory data) internal {\n        (bool success, bytes memory result) = target.call{value : value}(data);\n        if (!success) {\n            assembly {\n                revert(add(result, 32), mload(result))\n            }\n        }\n    }\n\n    /**\n     * check current account deposit in the entryPoint\n     */\n    function getDeposit() public view returns (uint256) {\n        return entryPoint().balanceOf(address(this));\n    }\n\n    /**\n     * deposit more funds for this account in the entryPoint\n     */\n    function addDeposit() public payable {\n        entryPoint().depositTo{value : msg.value}(address(this));\n    }\n\n    /**\n     * withdraw value from the account's deposit\n     * @param withdrawAddress target to send to\n     * @param amount to withdraw\n     */\n    function withdrawDepositTo(address payable withdrawAddress, uint256 amount) public onlyOwner {\n        entryPoint().withdrawTo(withdrawAddress, amount);\n    }\n\n    function _authorizeUpgrade(address newImplementation) internal view override {\n        (newImplementation);\n        _onlyOwner();\n    }\n}\n\n"
+      }
+    }
+  ]
+}
