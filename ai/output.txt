@@ -1,0 +1,242 @@
+```json
+{
+  "protocolName": "ExampleProtocol",
+  "chain": "base",
+  "contracts": [
+    {
+      "name": "ERC1967Proxy",
+      "isVerified": true,
+      "sourceCode": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v4.7.0) (proxy/ERC1967/ERC1967Proxy.sol)\n\npragma solidity ^0.8.0;\n\nimport \"../Proxy.sol\";\nimport \"./ERC1967Upgrade.sol\";\n\n/**\n * @dev This contract implements an upgradeable proxy...\n */\ncontract ERC1967Proxy is Proxy, ERC1967Upgrade {\n    constructor(address _logic, bytes memory _data) payable {\n        _upgradeToAndCall(_logic, _data, false);\n    }\n\n    function _implementation() internal view virtual override returns (address impl) {\n        return ERC1967Upgrade._getImplementation();\n    }\n}\n",
+      "abi": [
+        {
+          "type": "constructor",
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_logic",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_data",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "event",
+          "name": "AdminChanged",
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "previousAdmin",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newAdmin",
+              "type": "address",
+              "indexed": false
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "Upgraded",
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "implementation",
+              "type": "address",
+              "indexed": true
+            }
+          ]
+        },
+        {
+          "type": "fallback",
+          "stateMutability": "payable"
+        },
+        {
+          "type": "receive",
+          "stateMutability": "payable"
+        }
+      ],
+      "relationships": {
+        "inheritsFrom": ["Proxy", "ERC1967Upgrade"],
+        "interactions": []
+      }
+    },
+    {
+      "name": "SimpleAccount",
+      "isVerified": true,
+      "sourceCode": "// SPDX-License-Identifier: GPL-3.0\npragma solidity ^0.8.12;\n\nimport \"@openzeppelin/contracts/utils/cryptography/ECDSA.sol\";\nimport \"@openzeppelin/contracts/proxy/utils/Initializable.sol\";\nimport \"@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol\";\n\n/* solhint-disable avoid-low-level-calls */\n\n/**\n  * minimal account.\n  *  this is sample minimal account.\n  */\ncontract SimpleAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {\n...\n}\n",
+      "abi": [
+        {
+          "type": "constructor",
+          "inputs": [
+            {
+              "internalType": "contract IEntryPoint",
+              "name": "anEntryPoint",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "event",
+          "name": "SimpleAccountInitialized",
+          "inputs": [
+            {
+              "internalType": "contract IEntryPoint",
+              "name": "entryPoint",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "execute",
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "dest",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "func",
+              "type": "bytes"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "getDeposit",
+          "inputs": [],
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "addDeposit",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "function",
+          "name": "withdrawDepositTo",
+          "inputs": [
+            {
+              "internalType": "address payable",
+              "name": "withdrawAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "initialize",
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "anOwner",
+              "type": "address"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "owner",
+          "inputs": [],
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view"
+        }
+      ],
+      "relationships": {
+        "inheritsFrom": ["BaseAccount", "TokenCallbackHandler", "UUPSUpgradeable", "Initializable"],
+        "interactions": [
+          {
+            "contract": "ERC1967Proxy",
+            "methods": ["execute", "addDeposit", "withdrawDepositTo"]
+          }
+        ]
+      }
+    }
+  ],
+  "tokens": [],
+  "security": {
+    "accessControls": [
+      {
+        "contract": "SimpleAccount",
+        "method": "onlyOwner",
+        "description": "Restricts access to owner only for certain functions."
+      },
+      {
+        "contract": "ERC1967Proxy",
+        "description": "Uses upgradeable proxy pattern to enable contract upgrades."
+      }
+    ],
+    "upgradeability": {
+      "pattern": "UUPS",
+      "description": "Allows the contract to be upgraded through the `upgradeTo` method."
+    }
+  },
+  "protocolArchitecture": {
+    "components": [
+      {
+        "name": "ERC1967Proxy",
+        "description": "A proxy for upgrading contracts."
+      },
+      {
+        "name": "SimpleAccount",
+        "description": "A minimal account contract with deposit management and transaction execution."
+      }
+    ],
+    "interactions": [
+      {
+        "from": "SimpleAccount",
+        "to": "ERC1967Proxy",
+        "description": "Uses the proxy for executing transactions."
+      }
+    ]
+  }
+}
+```
