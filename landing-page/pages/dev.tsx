@@ -1,6 +1,9 @@
 import AddressInput from "@/component/address-input";
 import { useState } from "react";
 import { useApi } from "../context/api.context";
+import Form from "@/component/form";
+import * as Yup from "yup";
+import { ethers } from "ethers";
 
 const DevPage = () => {
   const { fetchRequest } = useApi();
@@ -21,8 +24,9 @@ const DevPage = () => {
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-blue-800 via-transparent to-black opacity-50 pointer-events-none"></div>
 
       <div className="">
-        <AddressInput value={abiAddress} onChange={setAbiAddress} />
-        <button className="p-2 bg-white" onClick={getAbi}>Get abi test</button>
+        <div className="text-white">
+
+        </div>
       </div>
     </div>
   );

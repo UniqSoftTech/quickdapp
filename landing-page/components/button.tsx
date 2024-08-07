@@ -1,3 +1,6 @@
+import Condition from "./condition";
+import Spinner from "./spinner";
+
 export interface IButtonProps {
   type?: "primary" | "secondary" | "outline" | "tertiary" | "link";
   size?: "tiny" | "small" | "medium" | "large" | "huge";
@@ -5,9 +8,11 @@ export interface IButtonProps {
   containerClass?: string;
   onClick?: () => void;
   text: string;
+  loading?: boolean;
 }
 
 const Button = ({
+  loading = false,
   shape = "round",
   type = "primary",
   size = "medium",
@@ -23,11 +28,21 @@ const Button = ({
     <button
       type="button"
       onClick={onClick}
-      className={`${containerClass}${btn_styles[type as StyleKeys]} ${
+      disabled={loading}
+      className={`relative ${containerClass}${btn_styles[type as StyleKeys]} ${
         shape_styles[shape as ShapeKeys]
       } ${size_styles[size as SizeKeys]}`}
     >
       {text}
+
+      <Condition
+        condition={loading}
+        truth={
+          <div className="absolute top-1/2  -translate-x-1/2 -translate-y-1/2 left-10">
+            <Spinner />
+          </div>
+        }
+      />
     </button>
   );
 };

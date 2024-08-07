@@ -4,6 +4,7 @@ import * as Formik from "formik";
 import List from "../list";
 import Button, { IButtonProps } from "../button";
 import ErrorBoundary from "../error-boundary";
+import Label from "./label";
 
 export interface IFieldProps {
   onChange?: (values: any) => void;
@@ -29,7 +30,7 @@ interface IFormProps {
 }
 
 const Form = ({
-  containerClass = "flex flex-col gap-2 w-full my-2",
+  containerClass = "flex flex-col gap-6 w-full my-2",
   validationSchema = undefined,
   buttonOptions,
   initialValues = {},
@@ -70,9 +71,13 @@ const Form = ({
                 <ErrorBoundary>
                   <div
                     key={`${name}-${k}`}
-                    className={"w-full flex flex-col gap-1 relative"}
+                    className={"w-full flex flex-col gap-3 relative"}
                   >
-                    <p>{label}</p>
+                    <Label
+                      name={name}
+                      label={label || ""}
+                      required={field?.required || false}
+                    />
 
                     <Field
                       {...field}
@@ -93,6 +98,7 @@ const Form = ({
             type="primary"
             onClick={handleSubmit}
             text={buttonOptions?.text || ""}
+            loading={buttonOptions?.loading}
             containerClass={buttonOptions?.containerClass}
           />
         </Formik.Form>
@@ -112,7 +118,19 @@ const formItems = {
       onChange={props?.onChange}
       placeholder={props?.placeholder}
       disabled={props?.disabled || false}
-      className={`block w-full px-4 py-3 text-sm font-normal shadow-xs text-gray-900 bg-transparent border rounded-[10px] placeholder-gray-400 focus:outline-none leading-relaxed ${props?.errClass}`}
+      className={`block w-full px-4 py-3 text-sm font-normal shadow-xs text-gray-100 bg-transparent border rounded-[10px] placeholder-gray-400 focus:outline-none leading-relaxed ${props?.errClass}`}
+    />
+  ),
+  "color-picker": (props: IFieldProps) => (
+    <input
+      type="color"
+      id={props?.name}
+      name={props?.name}
+      color={props?.value}
+      onBlur={props?.onBlur}
+      onChange={props?.onChange}
+      disabled={props?.disabled || false}
+      className={`w-full outline-0 ${props?.errClass}`}
     />
   ),
 };
