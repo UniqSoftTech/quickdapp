@@ -44,7 +44,7 @@ export class FrontendGenerator {
       await this.createNextJsApp(projectPath);
       await this.installDependencies(projectPath);
       await this.copyTemplateFiles(aiOutput.selectedTemplates, projectPath, title, description);
-      await this.generateAppComponent(aiOutput, contractAddress, contractABI, projectPath);
+      await this.generateAppComponent(aiOutput, contractAddress, contractABI, projectPath, theme);
 
       console.log("Frontend generation complete!");
       return { success: true, message: "Frontend generation complete" };
@@ -100,7 +100,6 @@ export class FrontendGenerator {
       "src/components/connection",
       "src/styles",
       "src/utils",
-      "src/components/layout",
       "src/components/display"
     ];
 
@@ -129,7 +128,6 @@ export class FrontendGenerator {
       { src: "common/SwapTemplate.jsx", dest: "src/components/common/SwapTemplate.jsx" },
       { src: "common/StakeTemplate.jsx", dest: "src/components/common/StakeTemplate.jsx" },
       { src: "styles/public.css", dest: "src/styles/public.css" },
-      { src: "layout/Layout.jsx", dest: "src/components/layout/Layout.jsx" },
       { src: "utils/colors.js", dest: "src/utils/colors.js" },
       { src: "utils/functions.js", dest: "src/utils/functions.js" },
       { src: "utils/logo.svg", dest: "public/logo.svg" },
@@ -152,8 +150,8 @@ export class FrontendGenerator {
     const seoHeadPath = path.join(projectPath, "src", "components", "display", "Head.jsx");
     let content = fs.readFileSync(seoHeadPath, "utf8");
 
-    content = content.replace(/title = "QuickDapp"/, `title = "${title}"`);
-    content = content.replace(/description = "Generate your web3 website"/, `description = "${description}"`);
+    content = content.replace(/QuickDapp/g, title);
+    content = content.replace(/Generate your web3 website/g, description);
 
     fs.writeFileSync(seoHeadPath, content, "utf8");
   }
@@ -175,7 +173,11 @@ export class FrontendGenerator {
     });
   }
 
-  private generateAppComponent(aiOutput: any, contractAddress: string, contractABI: any, projectPath: string) {
+  private replaceDefaultColor = (configContent: string, newColor: string) => {
+    return configContent.replace(/DEFAULT: ?['"]#([A-Fa-f0-9]{6})['"]/g, `DEFAULT: '${newColor}'`);
+  };
+
+  private generateAppComponent(aiOutput: any, contractAddress: string, contractABI: any, projectPath: string, theme: string) {
     const importTemplates = aiOutput.selectedTemplates
       .map(
         (t: any) =>
@@ -270,7 +272,8 @@ export class FrontendGenerator {
     // Update tailwind.config.js
     const sourceTailwindConfigPath = path.join(__dirname, "..", "..", "templates", "utils", "tailwind.config.js");
     const targetTailwindConfigPath = path.join(projectPath, 'tailwind.config.js');
-    const customTailwindConfig = fs.readFileSync(sourceTailwindConfigPath, 'utf8');
+    let customTailwindConfig = fs.readFileSync(sourceTailwindConfigPath, 'utf8');
+    customTailwindConfig = this.replaceDefaultColor(customTailwindConfig, theme);
     fs.writeFileSync(targetTailwindConfigPath, customTailwindConfig);
 
     const srcAppPath = path.join("src", "app");
