@@ -47,17 +47,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Wait for Elastic Beanstalk environment to be ready
-      run: |
-        while true; do
-          STATUS=$(aws elasticbeanstalk describe-environments --environment-names prod --query "Environments[0].Status" --output text)
-          if [ "$STATUS" == "Ready" ]; then
-            break
-          fi
-          echo "Environment is $STATUS. Waiting for it to be Ready..."
-          sleep 30
-        done
-
     - name: Deploy to AWS Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v22
       with:
@@ -75,10 +64,12 @@ jobs:
         aws elasticbeanstalk update-environment \
           --environment-name prod \
           --option-settings \
-            Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ secrets.BLOCKSCOUT_URL }}
+            Namespace=aws:elasticbeanstalk:application:environment,OptionName=BLOCKSCOUT_URL,Value=${{ secrets.BLOCKSCOUT_URL }} \
+            Namespace=aws:elasticbeanstalk:application:environment,OptionName=ALCHEMY_APP_API_KEY,Value=${{ secrets.ALCHEMY_APP_API_KEY }}
+
     - name: Check deployment status
       if: steps.deploy.outcome == 'failure'
       run: |
         echo "Deployment failed. Checking Elastic Beanstalk logs..."
-        aws elasticbeanstalk describe-events --environment-name prod --output text
+        aws elasticbeanstalk describe-events --environment-name Quickdapp-env --output text
         exit 1
