@@ -15,22 +15,6 @@ const SEOHead = ({
 }) => {
   return (
     <>
-      <Script
-        async
-        id="googletagmanager"
-        src="https://www.googletagmanager.com/gtag/js?id=G-S5XJM3Y7K5"
-      />
-      <Script
-        id="googletagmanagerscript"
-        dangerouslySetInnerHTML={{
-          __html: `
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-S5XJM3Y7K5');
-        `,
-        }}
-      />
       <Head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />

@@ -2,9 +2,9 @@ import React from "react";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
 import "../styles/public.css";
-import Layout from "@/components/layout/layout";
 import { Inter } from "next/font/google";
 import SEOHead from "@/components/display/Head";
+import Layout from "@/components/display/Layout";
 
 const activeChainId = ChainId.Mainnet;
 const inter = Inter({ subsets: ["latin"] });
