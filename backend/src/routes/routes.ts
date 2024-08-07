@@ -12,5 +12,6 @@ router.post("/generate", mainController.buildApp.bind(mainController));
 router.post("/contract/get-metadata", contractController.getMetaData.bind(contractController));
 router.post("/contract/get-abi", contractController.getABI.bind(contractController));
 router.get("/contract/top-tokens", contractController.getTopTokens.bind(contractController));
+router.post("/token/search", contractController.searchTokens.bind(contractController));
 
 export default router;
