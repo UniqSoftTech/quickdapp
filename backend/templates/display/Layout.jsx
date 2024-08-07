@@ -18,6 +18,8 @@ function Layout({ children }) {
             src={Logo}
             className="object-contain w-32 h-12 md:w-40 md:h-14"
             alt="Logo"
+            width={20}
+            height={20}
           />
 
           <nav className="items-center hidden gap-4 mt-2 ml-0 md:flex md:ml-6 md:mt-0">

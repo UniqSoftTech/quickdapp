@@ -33,8 +33,7 @@ export class FrontendGenerator {
     logo: string,
   ): Promise<{ success: boolean; message: string }> {
     //Replace space with the - and make title lower case
-    const sanitizedTitle = title.toLowerCase().replace(/\s+/g, '-');
-    const projectName = sanitizedTitle;
+    const projectName = title.toLowerCase().replace(/\s+/g, '-');
     const generateDir = path.join(__dirname, "..", "..", "generate");
 
     try {
@@ -183,6 +182,28 @@ export class FrontendGenerator {
     return configContent.replace(/DEFAULT: ?['"]#([A-Fa-f0-9]{6})['"]/g, `DEFAULT: '${newColor}'`);
   };
 
+  private async configureNextConfig(projectPath: string): Promise<void> {
+    const nextConfigPath = path.join(projectPath, "next.config.mjs");
+
+    const nextConfigContent = `
+      /** @type {import('next').NextConfig} */
+      const nextConfig = {
+        images: {
+          remotePatterns: [
+            {
+              protocol: "https",
+              hostname: "**",
+            },
+          ],
+        },
+      };
+      
+      export default nextConfig;
+    `;
+
+    fs.writeFileSync(nextConfigPath, nextConfigContent);
+  };
+
   private generateAppComponent(aiOutput: any, contractAddress: string, contractABI: any, projectPath: string, theme: string) {
     const importTemplates = aiOutput.selectedTemplates
       .map(
@@ -281,6 +302,8 @@ export class FrontendGenerator {
     let customTailwindConfig = fs.readFileSync(sourceTailwindConfigPath, 'utf8');
     customTailwindConfig = this.replaceDefaultColor(customTailwindConfig, theme);
     fs.writeFileSync(targetTailwindConfigPath, customTailwindConfig);
+
+    this.configureNextConfig(projectPath);
 
     const srcAppPath = path.join("src", "app");
     if (fs.existsSync(srcAppPath)) {
