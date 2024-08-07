@@ -5,7 +5,7 @@ import Form, { IFieldProps } from "@/component/form";
 import * as Yup from "yup";
 
 export default function GetStartedPage() {
-  const { fetchRequest, isGenerate } = useApi();
+  const { fetchRequest, isGenerate, resGenerate } = useApi();
   const { showToast } = useToast();
 
   const validationSchema = {
@@ -73,7 +73,7 @@ export default function GetStartedPage() {
       },
     });
 
-    if (!res?.success) showToast(res?.messase, "error");
+    if (!res?.success) showToast("Sorry, something went wrong", "error");
     else showToast(res?.message, "success");
   }
 
