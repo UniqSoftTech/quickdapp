@@ -43,7 +43,7 @@ export class FrontendGenerator {
 
       await this.createNextJsApp(projectPath);
       await this.installDependencies(projectPath);
-      await this.copyTemplateFiles(aiOutput.selectedTemplates, projectPath, title, description);
+      await this.copyTemplateFiles(aiOutput.selectedTemplates, projectPath, title, description, logo);
       await this.generateAppComponent(aiOutput, contractAddress, contractABI, projectPath, theme);
 
       console.log("Frontend generation complete!");
@@ -91,7 +91,7 @@ export class FrontendGenerator {
     }
   }
 
-  private copyTemplateFiles(templates: any, projectPath: string, title: string, description: string) {
+  private copyTemplateFiles(templates: any, projectPath: string, title: string, description: string, logo: string) {
     const templateDir = path.join(__dirname, "..", "..", "templates");
 
     const directoriesToCreate = [
@@ -141,6 +141,12 @@ export class FrontendGenerator {
     const displaySourceDir = path.join(templateDir, "display");
     const displayDestDir = path.join(projectPath, "src", "components", "display");
     this.copyDirectoryRecursive(displaySourceDir, displayDestDir);
+
+    // Update Layout.jsx with the logo URL
+    const layoutFilePath = path.join(projectPath, "src", "components", "display", "Layout.jsx");
+    let layoutFileContent = fs.readFileSync(layoutFilePath, 'utf8');
+    layoutFileContent = layoutFileContent.replace(/src={Logo}/g, `src="${logo}"`);
+    fs.writeFileSync(layoutFilePath, layoutFileContent, 'utf8');
 
     // Modify Head.jsx
     this.modifySEOHead(projectPath, title, description);
