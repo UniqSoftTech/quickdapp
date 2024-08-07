@@ -2,7 +2,8 @@ import { Alchemy, Network, TokenMetadataResponse } from "alchemy-sdk";
 import { ALCHEMY_APP_API_KEY } from "../config/env.config";
 
 const config = {
-  apiKey: ALCHEMY_APP_API_KEY,
+  // apiKey: ALCHEMY_APP_API_KEY,
+  apiKey: "88qZtQwZSJtRPy8GJ88auDXJjBl4upne",
   network: Network.ETH_MAINNET,
 };
 

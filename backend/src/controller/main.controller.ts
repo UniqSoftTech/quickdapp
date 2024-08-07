@@ -19,15 +19,7 @@ export class MainController {
       const abiResponse = await this.blocksoutService.getABI(contract_address);
       const abi = JSON.parse(abiResponse.result); // Parse the ABI string to an object
 
-      const result = await this.frontendGeneratorService.generateFrontend(
-        dummyAiOutput,
-        contract_address,
-        abi,
-        title,
-        description,
-        theme,
-        logo,
-      );
+      const result = await this.frontendGeneratorService.generateFrontend(dummyAiOutput, contract_address, abi, title, description, theme, logo);
 
       success({
         res, message: "Frontend generated successfully", status: 200, result,
