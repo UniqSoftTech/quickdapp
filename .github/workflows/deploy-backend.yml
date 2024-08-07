@@ -71,5 +71,5 @@ jobs:
       if: steps.deploy.outcome == 'failure'
       run: |
         echo "Deployment failed. Checking Elastic Beanstalk logs..."
-        aws elasticbeanstalk describe-events --environment-name Quickdapp-env --output text
+        aws elasticbeanstalk describe-events --environment-name prod --output text
         exit 1
