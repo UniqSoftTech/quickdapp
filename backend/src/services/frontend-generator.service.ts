@@ -41,9 +41,11 @@ export class FrontendGenerator {
       const projectPath = path.join(generateDir, projectName);
 
       await this.createNextJsApp(projectPath);
+      await this.createEnvFile(projectPath, contractAddress);
       await this.installDependencies(projectPath);
       await this.copyTemplateFiles(aiOutput.selectedTemplates, projectPath, title, description, logo);
       await this.generateAppComponent(aiOutput, contractAddress, contractABI, projectPath, theme);
+      await this.configureNextConfig(projectPath, contractAddress);
 
       console.log("Frontend generation complete!");
       return { success: true, message: "Frontend generation complete" };
@@ -63,6 +65,13 @@ export class FrontendGenerator {
     if (!fs.existsSync(projectPath)) {
       fs.mkdirSync(projectPath, { recursive: true });
     }
+  }
+
+  private async createEnvFile(projectPath: string, contractAddress: string): Promise<void> {
+    const envContent = `NEXT_PUBLIC_CONTRACT_ADDRESS=${contractAddress}\n`;
+    const envFilePath = path.join(projectPath, ".env");
+    fs.writeFileSync(envFilePath, envContent, "utf8");
+    console.log(".env file created successfully.");
   }
 
   private async createNextJsApp(projectPath: string): Promise<void> {
@@ -182,7 +191,7 @@ export class FrontendGenerator {
     return configContent.replace(/DEFAULT: ?['"]#([A-Fa-f0-9]{6})['"]/g, `DEFAULT: '${newColor}'`);
   };
 
-  private async configureNextConfig(projectPath: string): Promise<void> {
+  private async configureNextConfig(projectPath: string, contractAddress: string): Promise<void> {
     const nextConfigPath = path.join(projectPath, "next.config.mjs");
 
     const nextConfigContent = `
@@ -195,6 +204,9 @@ export class FrontendGenerator {
               hostname: "**",
             },
           ],
+        },
+        publicRuntimeConfig: {
+          contractAddress: "${contractAddress}",
         },
       };
       
@@ -302,8 +314,6 @@ export class FrontendGenerator {
     let customTailwindConfig = fs.readFileSync(sourceTailwindConfigPath, 'utf8');
     customTailwindConfig = this.replaceDefaultColor(customTailwindConfig, theme);
     fs.writeFileSync(targetTailwindConfigPath, customTailwindConfig);
-
-    this.configureNextConfig(projectPath);
 
     const srcAppPath = path.join("src", "app");
     if (fs.existsSync(srcAppPath)) {

@@ -13,7 +13,7 @@ function TokenTransferTemplate({ suggestedAmounts, contractAddress }) {
   const [visible, setVisible] = useState(false);
   const [amount, setAmount] = useState("");
   const [recipient, setRecipient] = useState("");
-  const { contract } = useContract(contractAddress, "erc20");
+  const { contract } = useContract(contractAddress);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 

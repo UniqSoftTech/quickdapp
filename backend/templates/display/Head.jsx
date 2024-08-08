@@ -16,7 +16,6 @@ const SEOHead = ({
   return (
     <>
       <Head>
-        <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="theme-color" content="#07C48F" />
         <title>{title}</title>
