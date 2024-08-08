@@ -8,12 +8,16 @@ import blockies from "ethereum-blockies";
 import Image from "next/image";
 import { useContract } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
+import getConfig from "next/config";
 
-function TokenTransferTemplate({ suggestedAmounts, contractAddress }) {
+function TokenTransferTemplate({ suggestedAmounts }) {
+  const { publicRuntimeConfig } = getConfig();
+  const { contractAddress } = publicRuntimeConfig;
+  const { contract } = useContract(contractAddress);
+
   const [visible, setVisible] = useState(false);
   const [amount, setAmount] = useState("");
   const [recipient, setRecipient] = useState("");
-  const { contract } = useContract(contractAddress, "erc20");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
