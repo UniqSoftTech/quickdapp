@@ -15,6 +15,7 @@ app.use(express.json({ limit: '1024mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req: Request, res: Response) => success({ res, message: "OK", status: 200, result: getVersion() }));
+app.get('/test', (req: Request, res: Response) => success({ res, message: "ITS WORKING", status: 200, result: getVersion() }));
 
 app.use("/api", routes);
 app.use((err: any, req: any, res: any, next: any) => failed({ res, err }));
