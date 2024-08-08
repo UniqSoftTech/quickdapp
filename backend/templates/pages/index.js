@@ -20,7 +20,6 @@ function DAppContent() {
     <div className="flex items-center justify-center md:pt-20">
       <TokenTransferTemplate
         suggestedAmounts={["10", "100", "1000"]}
-        contractAddress={contractAddress}
       />
     </div>
   );

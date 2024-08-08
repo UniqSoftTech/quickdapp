@@ -7,7 +7,7 @@ import SearchInput from "../display/SearchInput";
 import Button from "../display/Button";
 import Modal from "../display/Modal";
 
-function SwapTemplate({ getEvents, eventName }) {
+function StakeTemplate({ getEvents, eventName }) {
   const [visible, setVisible] = useState(false);
   const [selectedType, setSelectedType] = useState(1);
 
@@ -128,4 +128,4 @@ const stakeTypes = [
     name: "Withdraw",
   },
 ];
-export default SwapTemplate;
+export default StakeTemplate;

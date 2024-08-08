@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useContract, useContractEvents } from "@thirdweb-dev/react";
+import getConfig from "next/config";
 
-function EventListTemplate({ contractAddress, eventName }) {
+function EventListTemplate({ eventName }) {
+  const { publicRuntimeConfig } = getConfig();
+  const { contractAddress } = publicRuntimeConfig;
   const { contract } = useContract(contractAddress);
   const { data: events, isLoading } = useContractEvents(contract, "Transfer");
 
