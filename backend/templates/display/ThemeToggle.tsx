@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { SunIcon, MoonIcon } from "@heroicons/react/24/outline";
-const ThemeToggle = () => {
-  const [theme, setTheme] = useState("light");
+
+const ThemeToggle: React.FC = () => {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
+    const savedTheme =
+      (localStorage.getItem("theme") as "light" | "dark") || "light";
     setTheme(savedTheme);
     setIsMounted(true);
   }, []);

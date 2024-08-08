@@ -1,4 +1,5 @@
 import React from "react";
+import { AppProps } from "next/app";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
 import "../styles/public.css";
@@ -9,13 +10,14 @@ import Layout from "@/components/display/Layout";
 const activeChainId = ChainId.Mainnet;
 const inter = Inter({ subsets: ["latin"] });
 
-function MyApp({ Component, pageProps }) {
+const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <>
       <SEOHead />
       <ThirdwebProvider
         clientId="4af4ad585e326e6e7b9f2c1fd001dee5"
-        desiredChainId={activeChainId}
+        activeChain={activeChainId}
+        // desiredChainId={activeChainId}
       >
         <main className={inter.className}>
           <Layout>
@@ -25,6 +27,6 @@ function MyApp({ Component, pageProps }) {
       </ThirdwebProvider>
     </>
   );
-}
+};
 
 export default MyApp;

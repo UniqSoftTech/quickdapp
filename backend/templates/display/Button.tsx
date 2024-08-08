@@ -2,7 +2,19 @@ import React from "react";
 import { useAddress, ConnectWallet } from "@thirdweb-dev/react";
 import colors from "@/utils/colors";
 
-function Button({ onClick, title, disabled, loading }) {
+interface ButtonProps {
+  onClick: () => void;
+  title: string;
+  disabled?: boolean;
+  loading?: boolean;
+}
+
+const Button: React.FC<ButtonProps> = ({
+  onClick,
+  title,
+  disabled,
+  loading,
+}) => {
   const address = useAddress();
 
   if (!address) {
@@ -72,6 +84,6 @@ function Button({ onClick, title, disabled, loading }) {
       </span>
     </button>
   );
-}
+};
 
 export default Button;

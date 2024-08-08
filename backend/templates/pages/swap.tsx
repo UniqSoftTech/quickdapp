@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAddress } from "@thirdweb-dev/react";
-import StakeTemplate from "@/components/common/StakeTemplate";
+import SwapTemplate from "@/components/common/SwapTemplate";
 
-function Stake() {
+const Swap: React.FC = () => {
   const address = useAddress();
 
   return (
     <div className="flex items-center justify-center md:pt-20">
-      <StakeTemplate />
+      <SwapTemplate />
     </div>
   );
-}
+};
 
-export default Stake;
+export default Swap;

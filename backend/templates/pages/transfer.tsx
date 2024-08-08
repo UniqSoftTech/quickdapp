@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAddress } from "@thirdweb-dev/react";
 import EventListTemplate from "@/components/common/EventListTemplate";
 
-function Transfer() {
+const Transfer: React.FC = () => {
   const address = useAddress();
 
   return (
@@ -10,6 +10,6 @@ function Transfer() {
       <EventListTemplate />
     </div>
   );
-}
+};
 
 export default Transfer;

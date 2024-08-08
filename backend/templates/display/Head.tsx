@@ -1,14 +1,26 @@
 import Head from "next/head";
-import Script from "next/script";
 
-const SEOHead = ({
-  title = "QuickDapp",
-  description = "Generate your web3 website",
+interface SEOHeadProps {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
+  canonicalUrl?: string;
+}
+
+const SEOHead: React.FC<SEOHeadProps> = ({
+  title = "Quick Dapp",
+  description = "Quick dapp the web 3 generator",
   keywords = "Optima, DeFI, Yield, Diversification, Gas",
-  ogTitle = "QuickDapp",
-  ogDescription = "Generate your web3 website",
+  ogTitle = "Quick Dapp",
+  ogDescription = "Quick dapp the web 3 generator",
   ogImage = "",
-  twitterTitle = "QuickDapp",
+  twitterTitle = "Quick Dapp",
   twitterDescription = "https://x.com/",
   twitterImage = "",
   canonicalUrl = "https://theoptima.xyz/",

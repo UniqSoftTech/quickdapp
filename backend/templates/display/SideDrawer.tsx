@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { XMarkIcon, Bars3Icon } from "@heroicons/react/24/outline"; // You can use any icons you like
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import ConnectWalletTemplate from "../connection/ConnectWalletTemplate";
 
-function SideDrawer({ isOpen, onClose }) {
+interface SideDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const SideDrawer: React.FC<SideDrawerProps> = ({ isOpen, onClose }) => {
   return (
     <div
       className={`fixed inset-0 z-50 flex ${
@@ -36,6 +41,6 @@ function SideDrawer({ isOpen, onClose }) {
       <div className="flex-grow" onClick={onClose} />
     </div>
   );
-}
+};
 
 export default SideDrawer;

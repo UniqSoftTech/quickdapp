@@ -1,7 +1,3 @@
-import {
-  ChevronDownIcon,
-  CurrencyPoundIcon,
-} from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import Button from "../display/Button";
 import blockies from "ethereum-blockies";
@@ -10,18 +6,24 @@ import { useContract } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 import getConfig from "next/config";
 
-function TokenTransferTemplate({ suggestedAmounts }) {
+interface TokenTransferTemplateProps {
+  suggestedAmounts: string[];
+}
+
+const TokenTransferTemplate: React.FC<TokenTransferTemplateProps> = ({
+  suggestedAmounts,
+}) => {
   const { publicRuntimeConfig } = getConfig();
   const { contractAddress } = publicRuntimeConfig;
   const { contract } = useContract(contractAddress);
+  console.log("🚀 ~ contract:", contract);
 
-  const [visible, setVisible] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [recipient, setRecipient] = useState("");
+  const [amount, setAmount] = useState<string>("");
+  const [recipient, setRecipient] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const generateIdenticon = (address) => {
+  const generateIdenticon = (address: string) => {
     return blockies.create({ seed: address }).toDataURL();
   };
 
@@ -30,7 +32,7 @@ function TokenTransferTemplate({ suggestedAmounts }) {
       setError("Recipient address is required");
       return;
     }
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
       setError("Valid amount is required");
       return;
     }
@@ -39,14 +41,11 @@ function TokenTransferTemplate({ suggestedAmounts }) {
     setError(null);
     try {
       const transferAmount = ethers.utils.parseUnits(amount, 18);
-      await contract.call("transfer", {
-        to: recipient,
-        amount: transferAmount,
-      });
+      await contract?.call("transfer", [recipient, transferAmount]);
       console.log("Transfer successful");
     } catch (err) {
       console.error("Transfer failed", err);
-      setError(err.message);
+      setError((err as Error).message);
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +105,7 @@ function TokenTransferTemplate({ suggestedAmounts }) {
         <Button
           title={"Transfer"}
           disabled={!recipient || !amount}
-          onClick={() => handleTransfer()}
+          onClick={handleTransfer}
         />
         {error && (
           <div className="p-2 border border-red-900 bg-neutral-800 rounded-xl">
@@ -116,6 +115,6 @@ function TokenTransferTemplate({ suggestedAmounts }) {
       </div>
     </div>
   );
-}
+};
 
 export default TokenTransferTemplate;

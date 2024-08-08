@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useAddress, useBalance } from "@thirdweb-dev/react";
 import { formatBalance } from "@/utils/functions";
 
-function BalanceDisplayTemplate({ symbol = "ethereum" }) {
+interface BalanceDisplayTemplateProps {
+  symbol?: string;
+}
+
+const BalanceDisplayTemplate: React.FC<BalanceDisplayTemplateProps> = ({
+  symbol = "ethereum",
+}) => {
   const address = useAddress();
   const { data: balance, isLoading: isBalanceLoading } = useBalance();
 
@@ -15,11 +21,11 @@ function BalanceDisplayTemplate({ symbol = "ethereum" }) {
         </div>
       ) : (
         <p className="font-semibold text-gray-400 text-gray-700 dark:text-gray-300">
-          {formatBalance(balance?.displayValue)} {balance?.symbol}
+          {formatBalance(balance?.displayValue || "0")} {balance?.symbol}
         </p>
       )}
     </div>
   );
-}
+};
 
 export default BalanceDisplayTemplate;

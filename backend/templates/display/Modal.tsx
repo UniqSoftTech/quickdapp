@@ -1,9 +1,16 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, ReactNode } from "react";
 
-function Modal({ isOpen, onClose, title, children }) {
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   const [showModal, setShowModal] = useState(false);
-  const modalRef = useRef(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -16,8 +23,11 @@ function Modal({ isOpen, onClose, title, children }) {
 
   // Close modal if clicked outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         onClose();
       }
     };
@@ -60,6 +70,6 @@ function Modal({ isOpen, onClose, title, children }) {
       </div>
     </div>
   );
-}
+};
 
 export default Modal;

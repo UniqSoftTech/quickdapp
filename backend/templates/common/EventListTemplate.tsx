@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useContract, useContractEvents } from "@thirdweb-dev/react";
 import getConfig from "next/config";
 
-function EventListTemplate({ eventName }) {
+interface EventListTemplateProps {
+  eventName: string;
+}
+
+const EventListTemplate: React.FC<EventListTemplateProps> = ({ eventName }) => {
   const { publicRuntimeConfig } = getConfig();
   const { contractAddress } = publicRuntimeConfig;
   const { contract } = useContract(contractAddress);
@@ -17,19 +21,20 @@ function EventListTemplate({ eventName }) {
         <p className="text-gray-700 dark:text-gray-300">Loading...</p>
       ) : events && events.length > 0 ? (
         <ul className="space-y-4">
-          {events.map((event, index) => (
+          {events.map((event: any, index: number) => (
             <li
               key={index}
               className="p-4 bg-gray-100 rounded-lg dark:bg-gray-700"
             >
               <p className="text-gray-900 dark:text-gray-100">
-                <span className="font-semibold">From:</span> {event.from}
+                <span className="font-semibold">From:</span> {event.data.from}
               </p>
               <p className="text-gray-900 dark:text-gray-100">
-                <span className="font-semibold">To:</span> {event.to}
+                <span className="font-semibold">To:</span> {event.data.to}
               </p>
               <p className="text-gray-900 dark:text-gray-100">
-                <span className="font-semibold">Value:</span> {event.value}
+                <span className="font-semibold">Value:</span>{" "}
+                {event.data.value.toString()}
               </p>
             </li>
           ))}
@@ -39,6 +44,6 @@ function EventListTemplate({ eventName }) {
       )}
     </div>
   );
-}
+};
 
 export default EventListTemplate;

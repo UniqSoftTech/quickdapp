@@ -10,7 +10,7 @@ ${importTemplates}
 const contractABI = ${contractABI};
 const contractAddress = "${contractAddress}";
 
-function DAppContent() {
+const DAppContent: React.FC = () => {
   const address = useAddress();
   const connectWithMetamask = useMetamask();
   const disconnect = useDisconnect();

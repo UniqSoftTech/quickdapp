@@ -1,10 +1,14 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 
-function SearchInput({ onSearch }) {
-  const [query, setQuery] = useState("");
+interface SearchInputProps {
+  onSearch: (query: string) => void;
+}
 
-  const handleInputChange = (event) => {
+const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
+  const [query, setQuery] = useState<string>("");
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   };
 
@@ -15,7 +19,7 @@ function SearchInput({ onSearch }) {
   return (
     <div className="flex border rounded-lg bg-neutral-800 border-neutral-700">
       <div className="flex items-center justify-center w-[50px]">
-        <MagnifyingGlassIcon className="w-5 h-5 color-neutral-600" />
+        <MagnifyingGlassIcon className="w-5 h-5 text-neutral-600" />
       </div>
       <input
         type="text"
@@ -26,6 +30,6 @@ function SearchInput({ onSearch }) {
       />
     </div>
   );
-}
+};
 
 export default SearchInput;

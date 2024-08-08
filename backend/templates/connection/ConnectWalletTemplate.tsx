@@ -10,7 +10,7 @@ import blockies from "ethereum-blockies";
 import Image from "next/image";
 import colors from "@/utils/colors";
 
-const formatBalance = (balance, decimals = 4) => {
+const formatBalance = (balance: string | undefined, decimals = 4): string => {
   if (!balance) return "0.0000";
   const parts = balance.split(".");
   if (parts.length > 1) {
@@ -21,18 +21,19 @@ const formatBalance = (balance, decimals = 4) => {
 
 function ConnectWalletTemplate() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const disconnect = useDisconnect();
   const wallet = useWallet();
   const address = useAddress();
   const { data: balance, isLoading: isBalanceLoading } = useBalance();
-  const formatAddress = (address) => {
+
+  const formatAddress = (address: string): string => {
     return `${address.substring(0, 6)}...${address.substring(
       address.length - 4,
     )}`;
   };
 
-  const generateIdenticon = (address) => {
+  const generateIdenticon = (address: string): string => {
     return blockies.create({ seed: address }).toDataURL();
   };
 
@@ -40,8 +41,11 @@ function ConnectWalletTemplate() {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
       setDropdownOpen(false);
     }
   };
@@ -54,8 +58,10 @@ function ConnectWalletTemplate() {
   }, []);
 
   const copyAddressToClipboard = () => {
-    navigator.clipboard.writeText(address);
-    setDropdownOpen(false);
+    if (address) {
+      navigator.clipboard.writeText(address);
+      setDropdownOpen(false);
+    }
   };
 
   return (
@@ -82,8 +88,8 @@ function ConnectWalletTemplate() {
               <Image
                 src={generateIdenticon(address)}
                 alt="identicon"
-                width={5}
-                height={5}
+                width={16}
+                height={16}
                 className="object-contain w-4 h-4 rounded-full"
               />
             </div>
