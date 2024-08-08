@@ -42,3 +42,26 @@ input:-webkit-autofill:active{
     transition: background-color 5000s ease-in-out 0s;
     box-shadow: inset 0 0 20px 20px #23232329;
 }
+
+
+@keyframes borderAnimation {
+  0% {
+    border-color: #4299e1; /* Tailwind's blue-500 */
+  }
+  25% {
+    border-color: #48bb78; /* Tailwind's green-500 */
+  }
+  50% {
+    border-color: #ed8936; /* Tailwind's orange-500 */
+  }
+  75% {
+    border-color: #e53e3e; /* Tailwind's red-500 */
+  }
+  100% {
+    border-color: #4299e1; /* Tailwind's blue-500 */
+  }
+}
+
+.animate-border {
+  animation: borderAnimation 3s infinite;
+}

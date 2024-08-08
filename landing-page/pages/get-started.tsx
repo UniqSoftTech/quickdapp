@@ -25,7 +25,7 @@ export default function GetStartedPage() {
   const fields: IFieldProps[] = [
     {
       name: "address",
-      type: "input",
+      type: "address-input",
       label: "Contract address",
       required: true,
       placeholder: "0x0000000000000000000000000000000000000000",
@@ -80,8 +80,9 @@ export default function GetStartedPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black overflow-hidden font-mono">
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-blue-800 via-transparent to-black opacity-50 pointer-events-none"></div>
+      <div className="animate-pulse relative z-[1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[280px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:bg-gradient-to-br before:from-transparent before:to-blue-700 before:opacity-10 after:from-sky-900 after:via-[#0141ff] after:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[560px]" />
 
-      <div className="w-11/12 sm:w-10/12 md:w-6/12 lg:w-6/12 xl:w-3/12 border bg-black rounded-2xl shadow-2xl p-4 flex flex-col gap-6">
+      <div className="w-10/12 sm:w-10/12 md:w-6/12 lg:w-8/12 xl:w-4/12 border bg-transparent rounded-2xl shadow-2xl p-4 flex flex-col gap-6 z-[2] ">
         <p className="text-white text-center font-bold text-2xl">
           Customize your Application
         </p>

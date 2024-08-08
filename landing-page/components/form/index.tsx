@@ -5,6 +5,7 @@ import List from "../list";
 import Button, { IButtonProps } from "../button";
 import ErrorBoundary from "../error-boundary";
 import Label from "./label";
+import AddressInput from "./address-input";
 
 export interface IFieldProps {
   onChange?: (values: any) => void;
@@ -94,7 +95,7 @@ const Form = ({
           />
 
           <Button
-            shape="round"
+            shape="square"
             type="primary"
             onClick={handleSubmit}
             text={buttonOptions?.text || ""}
@@ -133,6 +134,7 @@ const formItems = {
       className={`w-full outline-0 ${props?.errClass}`}
     />
   ),
+  "address-input": (props: IFieldProps) => <AddressInput {...props} />,
 };
 
 export default Form;

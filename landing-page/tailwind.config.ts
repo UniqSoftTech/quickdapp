@@ -8,6 +8,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      animation: {
+        'border-spin': 'border-spin 2s linear infinite',
+      },
+      keyframes: {
+        'border-spin': {
+          '0%': { borderColor: 'transparent' },
+          '50%': { borderColor: 'rgba(255, 255, 255, 0.1)' },
+          '100%': { borderColor: 'transparent' },
+        },
+      },
+      boxShadow: {
+        'custom-shadow': '-10px 100px 25px rgba(0, 0, 0, 0.9)',
+      },
+
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -15,7 +29,7 @@ const config: Config = {
       },
 
       colors: {
-        primary: "#00215E",
+        primary: "#0667d0",
       }
     },
   },
