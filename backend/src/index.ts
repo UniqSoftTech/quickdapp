@@ -1,12 +1,15 @@
 import express, { Express, Request, Response } from 'express';
+import timeout from 'connect-timeout';
 import cors from 'cors';
+
 import { failed, success } from './utils/res.utils';
-import routes from './routes/routes';
-import { PORT } from './config/env.config';
 import { getVersion } from './utils/version.utils';
+import { PORT } from './config/env.config';
+import routes from './routes/routes';
 
 const app: Express = express();
 
+app.use(timeout('300s'));
 app.use(cors({ origin: '*', methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS' }));
 app.use(express.json({ limit: '1024mb' }));
 app.use(express.urlencoded({ extended: true }));
