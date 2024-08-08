@@ -14,13 +14,15 @@ function Layout({ children }) {
     <div className="flex flex-col min-h-screen bg-neutral-900">
       <header className="flex flex-row items-center justify-between w-full px-6 py-3 md:flex-row bg-neutral-900">
         <div className="flex items-center gap-3">
-          <Image
-            src={Logo}
-            className="object-contain w-32 h-12 md:w-40 md:h-14"
-            alt="Logo"
-            width={20}
-            height={20}
-          />
+          <Link href="/" passHref>
+            <Image
+              src={Logo}
+              className="object-contain w-32 h-12 md:w-40 md:h-14"
+              alt="Logo"
+              width={20}
+              height={20}
+            />
+          </Link>
 
           <nav className="items-center hidden gap-4 mt-2 ml-0 md:flex md:ml-6 md:mt-0">
             <Link href="/" passHref>
