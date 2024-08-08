@@ -55,7 +55,7 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
       dispatch({ model: modelKey, type: ACTION.REQ });
 
       const response = await fetch(
-        "http://quickdapp.us-east-1.elasticbeanstalk.com" + url,
+        "https://quickdapp-api.theoptima.xyz/api" + url,
         {
           method: method,
           mode: "cors",
@@ -73,7 +73,11 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
       });
 
       if (!response.ok) {
-        dispatch({ model: modelKey, data: response, type: ACTION.RES });
+        dispatch({
+          model: modelKey,
+          data: (await response?.json?.()) || response,
+          type: ACTION.RES,
+        });
         return (await response?.message) || response;
       }
 
