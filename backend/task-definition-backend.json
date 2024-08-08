@@ -1,0 +1,102 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:471112912931:task-definition/quickdapp-api-task:1",
+    "containerDefinitions": [
+        {
+            "name": "quickdapp-api",
+            "image": "471112912931.dkr.ecr.us-east-1.amazonaws.com/quickdapp-api:latest",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "3001",
+                    "containerPort": 3001,
+                    "hostPort": 3001,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "PORT",
+                    "value": "3001"
+                },
+                {
+                    "name": "BLOCKSCOUT_URL",
+                    "value": "http://blockscout.com/eth/mainnet/api"
+                },
+                {
+                    "name": "ALCHEMY_APP_API_KEY",
+                    "value": "wzDtsVSoub07ZmurhFzDH3jDgZiI9V6X"
+                }
+            ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/quickdapp-api-task",
+                    "awslogs-create-group": "true",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "quickdapp-api-task",
+    "taskRoleArn": "arn:aws:iam::471112912931:role/OptimaTaskRole",
+    "executionRoleArn": "arn:aws:iam::471112912931:role/OptimaTaskRole",
+    "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2024-08-08T06:13:58.041Z",
+    "registeredBy": "arn:aws:sts::471112912931:assumed-role/AWSReservedSSO_AdministratorAccess_ae7a510987007aed/jiguur",
+    "tags": []
+}
