@@ -151,10 +151,12 @@ export class FrontendGenerator {
     this.copyDirectoryRecursive(displaySourceDir, displayDestDir);
 
     // Update Layout.jsx with the logo URL
-    const layoutFilePath = path.join(projectPath, "src", "components", "display", "Layout.jsx");
-    let layoutFileContent = fs.readFileSync(layoutFilePath, 'utf8');
-    layoutFileContent = layoutFileContent.replace(/src={Logo}/g, `src="${logo}"`);
-    fs.writeFileSync(layoutFilePath, layoutFileContent, 'utf8');
+    if (logo) {
+      const layoutFilePath = path.join(projectPath, "src", "components", "display", "Layout.jsx");
+      let layoutFileContent = fs.readFileSync(layoutFilePath, 'utf8');
+      layoutFileContent = layoutFileContent.replace(/src={Logo}/g, `src="${logo}"`);
+      fs.writeFileSync(layoutFilePath, layoutFileContent, 'utf8');
+    }
 
     // Modify Head.jsx
     this.modifySEOHead(projectPath, title, description);
