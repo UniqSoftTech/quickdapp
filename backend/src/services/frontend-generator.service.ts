@@ -78,7 +78,7 @@ export class FrontendGenerator {
     console.log("Creating a new Next.js app...");
     try {
       await this.execAsync(
-        `npx create-next-app@latest ${projectPath} --js --tailwind --eslint --src-dir --app --import-alias '@/*'`
+        `npx create-next-app@latest ${projectPath} --ts --tailwind --eslint --src-dir --app --import-alias '@/*'`
       );
       console.log("Next.js app created successfully.");
     } catch (error) {
@@ -119,25 +119,25 @@ export class FrontendGenerator {
       const sourceFile = path.join(
         templateDir,
         template.type,
-        `${template.id.charAt(0).toUpperCase() + template.id.slice(1)}Template.jsx`
+        `${template.id.charAt(0).toUpperCase() + template.id.slice(1)}Template.tsx`
       );
       const destFile = path.join(
         projectPath,
         "src",
         "components",
         template.type,
-        `${template.id.charAt(0).toUpperCase() + template.id.slice(1)}Template.jsx`
+        `${template.id.charAt(0).toUpperCase() + template.id.slice(1)}Template.tsx`
       );
       fs.copyFileSync(sourceFile, destFile);
     });
 
     // Copy individual files
     const filesToCopy = [
-      { src: "common/SwapTemplate.jsx", dest: "src/components/common/SwapTemplate.jsx" },
-      { src: "common/StakeTemplate.jsx", dest: "src/components/common/StakeTemplate.jsx" },
+      { src: "common/SwapTemplate.tsx", dest: "src/components/common/SwapTemplate.tsx" },
+      { src: "common/StakeTemplate.tsx", dest: "src/components/common/StakeTemplate.tsx" },
       { src: "styles/public.css", dest: "src/styles/public.css" },
-      { src: "utils/colors.js", dest: "src/utils/colors.js" },
-      { src: "utils/functions.js", dest: "src/utils/functions.js" },
+      { src: "utils/colors.tsx", dest: "src/utils/colors.tsx" },
+      { src: "utils/functions.tsx", dest: "src/utils/functions.tsx" },
       { src: "utils/logo.svg", dest: "public/logo.svg" },
     ];
 
@@ -150,20 +150,20 @@ export class FrontendGenerator {
     const displayDestDir = path.join(projectPath, "src", "components", "display");
     this.copyDirectoryRecursive(displaySourceDir, displayDestDir);
 
-    // Update Layout.jsx with the logo URL
+    // Update Layout.tsx with the logo URL
     if (logo) {
-      const layoutFilePath = path.join(projectPath, "src", "components", "display", "Layout.jsx");
+      const layoutFilePath = path.join(projectPath, "src", "components", "display", "Layout.tsx");
       let layoutFileContent = fs.readFileSync(layoutFilePath, 'utf8');
       layoutFileContent = layoutFileContent.replace(/src={Logo}/g, `src="${logo}"`);
       fs.writeFileSync(layoutFilePath, layoutFileContent, 'utf8');
     }
 
-    // Modify Head.jsx
+    // Modify Head.tsx
     this.modifySEOHead(projectPath, title, description);
   }
 
   private modifySEOHead(projectPath: string, title: string, description: string) {
-    const seoHeadPath = path.join(projectPath, "src", "components", "display", "Head.jsx");
+    const seoHeadPath = path.join(projectPath, "src", "components", "display", "Head.tsx");
     let content = fs.readFileSync(seoHeadPath, "utf8");
 
     content = content.replace(/QuickDapp/g, title);
@@ -273,7 +273,7 @@ export class FrontendGenerator {
 
     // Read index.js template and replace placeholders
     const indexTemplate = fs.readFileSync(
-      path.join(__dirname, "..", "..", "templates", "pages", "index.js"),
+      path.join(__dirname, "..", "..", "templates", "pages", "index.tsx"),
       "utf8"
     );
     const indexContent = indexTemplate
@@ -285,25 +285,25 @@ export class FrontendGenerator {
     // Ensure the 'src/pages' directory exists
     fs.mkdirSync(path.join(projectPath, "src", "pages"), { recursive: true });
 
-    fs.writeFileSync(path.join(projectPath, "src", "pages", "index.js"), indexContent);
+    fs.writeFileSync(path.join(projectPath, "src", "pages", "index.tsx"), indexContent);
 
     // Read _app.js template and write it directly
     const appTemplate = fs.readFileSync(
-      path.join(__dirname, "..", "..", "templates", "pages", "_app.js"),
+      path.join(__dirname, "..", "..", "templates", "pages", "_app.tsx"),
       "utf8"
     );
-    fs.writeFileSync(path.join(projectPath, "src", "pages", "_app.js"), appTemplate);
+    fs.writeFileSync(path.join(projectPath, "src", "pages", "_app.tsx"), appTemplate);
 
-    const sourceSwapFilePath = path.join(__dirname, "..", "..", "templates", "pages", "swap.js");
-    const targetSwapFilePath = path.join(projectPath, "src", "pages", "swap.js");
+    const sourceSwapFilePath = path.join(__dirname, "..", "..", "templates", "pages", "swap.tsx");
+    const targetSwapFilePath = path.join(projectPath, "src", "pages", "swap.tsx");
     const targetSwapDir = path.dirname(targetSwapFilePath);
     if (!fs.existsSync(targetSwapDir)) {
       fs.mkdirSync(targetSwapDir, { recursive: true });
     }
     fs.copyFileSync(sourceSwapFilePath, targetSwapFilePath);
 
-    const sourceTransferFilePath = path.join(__dirname, "..", "..", "templates", "pages", "transfer.js");
-    const targetTransferFilePath = path.join(projectPath, "src", "pages", "transfer.js");
+    const sourceTransferFilePath = path.join(__dirname, "..", "..", "templates", "pages", "transfer.tsx");
+    const targetTransferFilePath = path.join(projectPath, "src", "pages", "transfer.tsx");
     const targetTransferDir = path.dirname(targetTransferFilePath);
     if (!fs.existsSync(targetTransferDir)) {
       fs.mkdirSync(targetTransferDir, { recursive: true });
