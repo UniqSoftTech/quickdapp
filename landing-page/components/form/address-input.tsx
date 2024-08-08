@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { IFieldProps } from "./index";
 
-export default (props: IFieldProps) => {
+const AddressInput = (props: IFieldProps) => {
   return (
     <div className="relative">
       <input
@@ -27,3 +27,4 @@ export default (props: IFieldProps) => {
     </div>
   );
 };
+export default AddressInput;
