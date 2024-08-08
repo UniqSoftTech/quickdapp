@@ -1,6 +1,6 @@
 import { dummyAiOutput, topTokens } from '../utils/dummy-data.utils';
 import { Response, Request } from "express";
-import { failed, success } from "../utils/res.utils";
+import { failed, send } from "../utils/res.utils";
 import { ethers } from "ethers"
 import { AlchemyService } from '../services/alchemy.service';
 import { BlockscoutService } from '../services/blocksout.service';
@@ -25,21 +25,21 @@ export class ContractController {
     try {
       const { address, network } = req.body;
 
-      if(!ethers.isAddress(address))
+      if (!ethers.isAddress(address))
         return failed({ res, message: "Invalid address" });
 
       const result = await this.alchemyService.getTokenMetadata(address, network);
-      success({ res, result })
-    } catch (error: Error | any) {
-      failed({ res, err: error, message: `Failed to get metadata for contract ${req.body.address}` });
+      send({ res, result })
+    } catch (err: Error | any) {
+      send({ res, err, message: `Failed to get metadata for contract ${req.body.address}`, success: false });
     }
   }
 
   async getTopTokens(req: Request, res: Response): Promise<void> {
     try {
-      success({ res, result: topTokens });
-    } catch (error: Error | any) {
-      failed({ res, err: error, message: `Failed to get top tokens` });
+      send({ res, result: topTokens });
+    } catch (err: Error | any) {
+      send({ res, err, message: `Failed to get top tokens`, success: false });
     }
   }
 
@@ -47,13 +47,13 @@ export class ContractController {
     try {
       const { address } = req.body;
 
-      if(!ethers.isAddress(address))
+      if (!ethers.isAddress(address))
         return failed({ res, message: "Invalid address" });
 
       const result = await this.blocksoutService.getABI(address).then((res) => JSON.parse(res.result));
-      success({ res, result });
-    } catch (error: Error | any) {
-      failed({ res, err: error, message: `Failed to get ABI for contract ${req.body.address}` });
+      send({ res, result });
+    } catch (err: Error | any) {
+      send({ res, err, message: `Failed to get ABI for contract ${req.body.address}`, success: false });
     }
   }
 
@@ -61,9 +61,9 @@ export class ContractController {
     try {
       const { query } = req.body;
       const result = await this.blocksoutService.searchTokens(query);
-      success({ res, result });
-    } catch (error: Error | any) {
-      failed({ res, err: error, message: `Failed to search tokens` });
+      send({ res, result });
+    } catch (err: Error | any) {
+      send({ res, err, message: `Failed to search tokens`, success: false });
     }
   }
 }

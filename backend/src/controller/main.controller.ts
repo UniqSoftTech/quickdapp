@@ -1,6 +1,6 @@
 import { dummyAiOutput } from '../utils/dummy-data.utils';
 import { Response, Request } from "express";
-import { failed, success } from "../utils/res.utils";
+import { failed, send, success } from "../utils/res.utils";
 import { BlockscoutService } from '../services/blocksout.service';
 import { FrontendGenerator } from '../services/frontend-generator.service';
 
@@ -21,12 +21,12 @@ export class MainController {
 
       const result = await this.frontendGeneratorService.generateFrontend(dummyAiOutput, contract_address, abi, title, description, theme, logo);
 
-      success({
-        res, message: "Frontend generated successfully", status: 200, result,
+      send({
+        res, message: "Frontend generated successfully", result,
       });
-    } catch (error) {
-      failed({
-        res, err: error, status: 500, message: "Failed to generate frontend",
+    } catch (err) {
+      send({
+        res, err, message: "Failed to generate frontend", success: false
       });
     }
   }
