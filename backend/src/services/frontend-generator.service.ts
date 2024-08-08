@@ -91,7 +91,7 @@ export class FrontendGenerator {
     try {
       process.chdir(projectPath);
       await this.execAsync(
-        "npm install @web3-react/core@^6.0.0 @web3-react/injected-connector @thirdweb-dev/react ethereum-blockies @thirdweb-dev/sdk @heroicons/react --legacy-peer-deps"
+        "npm install @web3-react/core@^6.0.0 @web3-react/injected-connector @thirdweb-dev/react ethereum-blockies zustand @thirdweb-dev/sdk @heroicons/react --legacy-peer-deps"
       );
       console.log("Dependencies installed successfully.");
     } catch (error) {
@@ -108,7 +108,8 @@ export class FrontendGenerator {
       "src/components/connection",
       "src/styles",
       "src/utils",
-      "src/components/display"
+      "src/components/display",
+      "src/hooks",
     ];
 
     directoriesToCreate.forEach((dir) => {
@@ -139,6 +140,9 @@ export class FrontendGenerator {
       { src: "utils/colors.tsx", dest: "src/utils/colors.tsx" },
       { src: "utils/functions.tsx", dest: "src/utils/functions.tsx" },
       { src: "utils/logo.svg", dest: "public/logo.svg" },
+      { src: "hooks/api.tsx", dest: "src/hooks/api.tsx" },
+      { src: "hooks/useGlobalRequestStore.tsx", dest: "src/hooks/useGlobalRequestStore.tsx" },
+      { src: "hooks/useRequest.tsx", dest: "src/hooks/useRequest.tsx" }
     ];
 
     filesToCopy.forEach(({ src, dest }) => {
