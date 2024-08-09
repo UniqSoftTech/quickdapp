@@ -91,7 +91,7 @@ export class FrontendGenerator {
     try {
       process.chdir(projectPath);
       await this.execAsync(
-        "npm install @web3-react/core@^6.0.0 @web3-react/injected-connector @thirdweb-dev/react ethereum-blockies zustand @thirdweb-dev/sdk @heroicons/react --legacy-peer-deps"
+        "npm install @web3-react/core@^6.0.0 @web3-react/injected-connector @thirdweb-dev/react ethereum-blockies zustand @thirdweb-dev/sdk @heroicons/react @types/ethereum-blockies --legacy-peer-deps"
       );
       console.log("Dependencies installed successfully.");
     } catch (error) {
@@ -317,8 +317,8 @@ export class FrontendGenerator {
     fs.copyFileSync(sourceTransferFilePath, targetTransferFilePath);
 
     // Update tailwind.config.js
-    const sourceTailwindConfigPath = path.join(__dirname, "..", "..", "templates", "utils", "tailwind.config.js");
-    const targetTailwindConfigPath = path.join(projectPath, 'tailwind.config.js');
+    const sourceTailwindConfigPath = path.join(__dirname, "..", "..", "templates", "utils", "tailwind.config.ts");
+    const targetTailwindConfigPath = path.join(projectPath, 'tailwind.config.ts');
     let customTailwindConfig = fs.readFileSync(sourceTailwindConfigPath, 'utf8');
     customTailwindConfig = this.replaceDefaultColor(customTailwindConfig, theme);
     fs.writeFileSync(targetTailwindConfigPath, customTailwindConfig);

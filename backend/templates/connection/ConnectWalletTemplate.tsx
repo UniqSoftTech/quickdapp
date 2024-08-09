@@ -9,6 +9,8 @@ import {
 import blockies from "ethereum-blockies";
 import Image from "next/image";
 import colors from "@/utils/colors";
+import tailwindConfig from "../../../tailwind.config";
+import resolveConfig from "tailwindcss/resolveConfig";
 
 const formatBalance = (balance: string | undefined, decimals = 4): string => {
   if (!balance) return "0.0000";
@@ -18,6 +20,7 @@ const formatBalance = (balance: string | undefined, decimals = 4): string => {
   }
   return balance;
 };
+const fullConfig = resolveConfig(tailwindConfig);
 
 function ConnectWalletTemplate() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -26,6 +29,7 @@ function ConnectWalletTemplate() {
   const wallet = useWallet();
   const address = useAddress();
   const { data: balance, isLoading: isBalanceLoading } = useBalance();
+  const primaryColor = fullConfig?.theme?.colors?.primary?.DEFAULT;
 
   const formatAddress = (address: string): string => {
     return `${address.substring(0, 6)}...${address.substring(
@@ -119,7 +123,7 @@ function ConnectWalletTemplate() {
           theme="light"
           modalTitle="QuickDapp"
           style={{
-            background: colors.main,
+            background: primaryColor,
             color: "black",
             padding: "10px 10px",
           }}
