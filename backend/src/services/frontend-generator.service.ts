@@ -68,7 +68,7 @@ export class FrontendGenerator {
   }
 
   private async createEnvFile(projectPath: string, contractAddress: string): Promise<void> {
-    const envContent = `NEXT_PUBLIC_CONTRACT_ADDRESS=${contractAddress}\n`;
+    const envContent = `NEXT_PUBLIC_CONTRACT_ADDRESS=${contractAddress}\nNEXT_PUBLIC_API_URL=https://quickdapp-api.theoptima.xyz/api/`;
     const envFilePath = path.join(projectPath, ".env");
     fs.writeFileSync(envFilePath, envContent, "utf8");
     console.log(".env file created successfully.");
@@ -110,6 +110,7 @@ export class FrontendGenerator {
       "src/utils",
       "src/components/display",
       "src/hooks",
+      "src/types",
     ];
 
     directoriesToCreate.forEach((dir) => {
@@ -142,7 +143,8 @@ export class FrontendGenerator {
       { src: "utils/logo.svg", dest: "public/logo.svg" },
       { src: "hooks/api.tsx", dest: "src/hooks/api.tsx" },
       { src: "hooks/useGlobalRequestStore.tsx", dest: "src/hooks/useGlobalRequestStore.tsx" },
-      { src: "hooks/useRequest.tsx", dest: "src/hooks/useRequest.tsx" }
+      { src: "hooks/useRequest.tsx", dest: "src/hooks/useRequest.tsx" },
+      { src: "types/request.tsx", dest: "src/types/request.tsx" }
     ];
 
     filesToCopy.forEach(({ src, dest }) => {
