@@ -137,6 +137,7 @@ export class FrontendGenerator {
     const filesToCopy = [
       { src: "common/SwapTemplate.tsx", dest: "src/components/common/SwapTemplate.tsx" },
       { src: "common/StakeTemplate.tsx", dest: "src/components/common/StakeTemplate.tsx" },
+      { src: "common/MintTemplate.tsx", dest: "src/components/common/MintTemplate.tsx" },
       { src: "styles/public.css", dest: "src/styles/public.css" },
       { src: "utils/colors.tsx", dest: "src/utils/colors.tsx" },
       { src: "utils/functions.tsx", dest: "src/utils/functions.tsx" },
