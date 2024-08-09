@@ -5,7 +5,7 @@ import ConnectWalletTemplate from "../connection/ConnectWalletTemplate";
 import Logo from "../../../public/logo.svg";
 import Link from "next/link";
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import SideDrawer from "../display/SideDrawer";
+import SideDrawer from "./SideDrawer";
 
 interface LayoutProps {
   children: ReactNode;
@@ -24,13 +24,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between w-full px-6 py-3">
         <div className="flex items-center gap-3">
-          <Image
-            src={Logo}
-            className="object-contain w-32 h-12 md:w-40 md:h-14"
-            alt="Logo"
-            width={20}
-            height={20}
-          />
+          <Link href="/" passHref>
+            <Image
+              src={Logo}
+              className="object-contain w-32 h-12 md:w-40 md:h-14"
+              alt="Logo"
+              width={20}
+              height={20}
+            />
+          </Link>
           <nav className="items-center hidden gap-4 ml-6 md:flex">
             <Link href="/" passHref>
               <p className="text-white cursor-pointer hover:text-gray-400">
