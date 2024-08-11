@@ -349,9 +349,12 @@ export class FrontendGenerator {
     import Button from '../display/Button';
     import blockies from 'ethereum-blockies';
     import Image from 'next/image';
+    import getConfig from "next/config";
   
     const ${form.name}: React.FC = () => {
-      const { contract } = useContract('${contractAddress}');
+      const { publicRuntimeConfig } = getConfig();
+      const { contractAddress } = publicRuntimeConfig;
+      const { contract } = useContract(contractAddress);
       const [formValues, setFormValues] = useState<any>({});
       const [identicon, setIdenticon] = useState<string | null>(null);
       const [error, setError] = useState<string | null>(null);
@@ -376,7 +379,7 @@ export class FrontendGenerator {
   
         setIsLoading(true);
         try {
-          await contract.call('${form.associatedFunction.name}', inputs);
+          await contract?.call('${form.associatedFunction.name}', inputs);
           console.log("${form.name} successful");
         } catch (err) {
           console.error("${form.name} failed", err);
