@@ -12,6 +12,12 @@ router.post("/generate", mainController.buildApp.bind(mainController));
 router.post("/contract/get-metadata", contractController.getMetaData.bind(contractController));
 router.post("/contract/get-abi", contractController.getABI.bind(contractController));
 router.get("/contract/top-tokens", contractController.getTopTokens.bind(contractController));
+router.get("/contract/get-chains", contractController.getNetworks.bind(contractController));
+
 router.post("/token/search", contractController.searchTokens.bind(contractController));
+
+router.post("/wallet/get-balance", contractController.getBalance.bind(contractController));
+router.post("/wallet/get-transactions", contractController.getTransactions.bind(contractController));
+
 
 export default router;
