@@ -300,7 +300,34 @@ export class FrontendGenerator {
 
   private createFormComponent(form: any, contractAddress: string) {
     const fields = form?.props?.fields?.map((field: any) => {
-      return `
+      if (field.type === 'address') {
+        return `
+          <div key="${field.name}" className="flex flex-col max-w-full gap-3 p-4 bg-neutral-800 rounded-xl">
+            <h2 className="text-neutral-500">${field.label}</h2>
+            <div className="flex items-center w-full gap-2">
+              <input
+                className="flex-grow w-full min-w-0 text-2xl font-semibold text-right bg-transparent outline-none"
+                placeholder="0x0..."
+                value={formValues.${field.name} || ""}
+                onChange={(e) => {
+                  setFormValues({ ...formValues, ${field.name}: e.target.value });
+                  setIdenticon(blockies.create({ seed: e.target.value }).toDataURL());
+                }}
+                style={{ direction: 'ltr' }}
+              />
+              {formValues.${field.name} && (
+                <Image
+                  src={identicon}
+                  alt="identicon"
+                  width={32}
+                  height={32}
+                  className="object-contain w-8 h-8 rounded-full"
+                />
+              )}
+            </div>
+          </div>`;
+      } else {
+        return `
           <div key="${field.name}" className="flex flex-col max-w-full gap-3 p-4 bg-neutral-800 rounded-xl">
             <h2 className="text-neutral-500">${field.label}</h2>
             <input
@@ -312,20 +339,34 @@ export class FrontendGenerator {
               style={{ direction: 'ltr' }}
             />
           </div>`;
-    })
-      .join("\n");
+      }
+    }).join("\n");
 
     return `
     import React, { useState } from 'react';
     import { useContract } from '@thirdweb-dev/react';
     import { ethers } from 'ethers';
     import Button from '../display/Button';
+    import blockies from 'ethereum-blockies';
+    import Image from 'next/image';
   
     const ${form.name}: React.FC = () => {
       const { contract } = useContract('${contractAddress}');
       const [formValues, setFormValues] = useState<any>({});
+      const [identicon, setIdenticon] = useState<string | null>(null);
+      const [error, setError] = useState<string | null>(null);
+      const [isLoading, setIsLoading] = useState(false);
   
       const handleSubmit = async () => {
+        setError(null);
+        const requiredFields = ${JSON.stringify(form?.props?.fields?.map((field: any) => field.name))};
+        const missingFields = requiredFields.filter((field) => !formValues[field]);
+
+        if (missingFields.length > 0) {
+          setError("All fields are required.");
+          return;
+        }
+        
         const inputs = [${form.associatedFunction.inputValues.map((input: any) => {
       if (input.type === 'wei') {
         return `ethers.utils.parseUnits(formValues.${input.name}, 18)`;
@@ -333,15 +374,29 @@ export class FrontendGenerator {
       return `formValues.${input.name}`;
     }).join(', ')}];
   
-        await contract.call('${form.associatedFunction.name}', inputs);
+        setIsLoading(true);
+        try {
+          await contract.call('${form.associatedFunction.name}', inputs);
+          console.log("${form.name} successful");
+        } catch (err) {
+          console.error("${form.name} failed", err);
+          setError((err as Error).message);
+        } finally {
+          setIsLoading(false);
+        }
       };
   
       return (
         <div className="flex flex-col w-full max-w-xl gap-5 p-6 rounded-3xl bg-neutral-950">
-          <div className="text-xl font-semibold">${form.props.submitLabel}</div>
+          <div className="text-xl font-semibold">${form.title}</div>
           <div className="flex flex-col gap-3">
             ${fields}
-            <Button onClick={handleSubmit} title="${form.props.submitLabel}" />
+            <Button onClick={handleSubmit} title="${form.props.submitLabel}" disabled={isLoading} />
+            {error && (
+              <div className="p-2 border border-red-900 bg-neutral-800 rounded-xl">
+                <p className="text-sm text-white">Error: {error}</p>
+              </div>
+            )}
           </div>
         </div>
       );
@@ -350,6 +405,7 @@ export class FrontendGenerator {
     export default ${form.name};
     `;
   }
+
 
   private generateComponentLinks = (components: any[]) => {
     return components?.map(component => {

@@ -35,9 +35,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <nav className="flex flex-col gap-4 mt-10">
             ${componentLinks}
           </nav>
-          <div className="mt-auto">
-            <ConnectWalletTemplate />
-          </div>
         </div>
       </aside>
 
@@ -64,6 +61,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
         {/* Main Content */}
         <main className="relative z-10 flex-grow p-4 text-white">
+          <div className="pr-4 absolute top-0 right-0 hidden md:block">
+            <ConnectWalletTemplate />
+          </div>
           {children}
         </main>
       </div>

@@ -1,12 +1,13 @@
 
 export const dummyAiOutput = {
     "protocolName": "ExampleProtocol",
-    "protocolDescription": "A protocol featuring an upgradeable proxy and a minimal account implementation allowing for flexible fund management.",
+    "protocolDescription": "A protocol utilizing upgradeable proxy contracts for enhanced functionality and flexibility in contract interactions.",
     "mainFeatures": [
-        "Upgradeable proxy architecture",
-        "Simple account management with deposit and withdrawal functionalities",
-        "Batch transaction execution",
-        "Event-driven notifications for account initialization and upgrades"
+        "Upgradeable Proxy Contract",
+        "Batch Execution of Transactions",
+        "Deposit and Withdrawal Mechanisms",
+        "Event Listening for State Changes",
+        "Owner Control Mechanism"
     ],
     "layout": {
         "navbar": {
@@ -14,79 +15,76 @@ export const dummyAiOutput = {
             "links": [
                 {
                     "title": "Home",
-                    "path": "/"
+                    "url": "/"
                 },
                 {
-                    "title": "Manage Account",
-                    "path": "/manage"
+                    "title": "Dashboard",
+                    "url": "/dashboard"
                 },
                 {
-                    "title": "Upgrade",
-                    "path": "/upgrade"
+                    "title": "Contracts",
+                    "url": "/contracts"
                 },
                 {
-                    "title": "Transactions",
-                    "path": "/transactions"
+                    "title": "About",
+                    "url": "/about"
                 }
             ]
         },
         "sidebar": {
             "sections": [
                 {
-                    "title": "Account",
-                    "links": [
-                        {
-                            "title": "View Balance",
-                            "path": "/balance"
-                        }
-                    ]
+                    "title": "Overview",
+                    "url": "/overview"
                 },
                 {
-                    "title": "Settings",
-                    "links": [
-                        {
-                            "title": "Change Admin",
-                            "path": "/admin"
-                        }
-                    ]
+                    "title": "Token Management",
+                    "url": "/tokens"
+                },
+                {
+                    "title": "Admin Panel",
+                    "url": "/admin"
                 }
             ]
         },
         "main": {
             "sections": [
                 {
-                    "title": "Account Overview",
-                    "content": "Displays account balance and recent transactions."
+                    "title": "Current Account",
+                    "content": "Display account details and actions."
                 },
                 {
-                    "title": "Deposit Funds",
-                    "content": "Allows users to add deposit to their account."
+                    "title": "Transaction History",
+                    "content": "Show past transactions and their statuses."
                 },
                 {
-                    "title": "Withdraw Funds",
-                    "content": "Allows users to withdraw funds to specified addresses."
-                },
-                {
-                    "title": "Execute Transactions",
-                    "content": "Interface to execute or batch execute transactions."
+                    "title": "Deposit and Withdraw",
+                    "content": "Manage account funds."
                 }
             ]
         },
         "footer": {
-            "content": "© 2023 ExampleProtocol. All rights reserved."
+            "links": [
+                {
+                    "title": "Privacy Policy",
+                    "url": "/privacy"
+                },
+                {
+                    "title": "Terms of Service",
+                    "url": "/terms"
+                }
+            ]
         }
     },
     "components": {
         "readComponents": [
             {
-                "type": "BalanceDisplay",
-                "title": "View Balance",
-                "name": "balanceDisplay",
-                "props": {
-                    "fetchBalance": true
-                },
+                "type": "Display",
+                "title": "Get Deposit",
+                "name": "getDepositDisplay",
+                "props": {},
                 "placement": {
-                    "section": "Account Overview",
+                    "section": "Current Account",
                     "order": 1
                 },
                 "associatedFunction": {
@@ -96,18 +94,31 @@ export const dummyAiOutput = {
                 }
             },
             {
-                "type": "TransactionHistory",
-                "title": "Transaction History",
-                "name": "transactionHistory",
-                "props": {
-                    "fetchTransactions": true
-                },
+                "type": "Display",
+                "title": "Get Nonce",
+                "name": "getNonceDisplay",
+                "props": {},
                 "placement": {
-                    "section": "Account Overview",
+                    "section": "Current Account",
                     "order": 2
                 },
                 "associatedFunction": {
-                    "name": "executeBatch",
+                    "name": "getNonce",
+                    "type": "view",
+                    "inputValues": []
+                }
+            },
+            {
+                "type": "Display",
+                "title": "Owner Address",
+                "name": "ownerAddressDisplay",
+                "props": {},
+                "placement": {
+                    "section": "Current Account",
+                    "order": 3
+                },
+                "associatedFunction": {
+                    "name": "owner",
                     "type": "view",
                     "inputValues": []
                 }
@@ -115,49 +126,56 @@ export const dummyAiOutput = {
         ],
         "writeComponents": [
             {
-                "type": "DepositForm",
-                "title": "Deposit Funds",
-                "name": "depositForm",
+                "type": "Form",
+                "title": "Add Deposit",
+                "name": "addDepositForm",
                 "props": {
                     "fields": [
                         {
                             "name": "amount",
                             "type": "number",
-                            "placeholder": "Amount to Deposit"
+                            "label": "Deposit Amount (ETH)"
                         }
-                    ]
+                    ],
+                    "submitLabel": "Deposit"
                 },
                 "placement": {
-                    "section": "Deposit Funds",
+                    "section": "Deposit and Withdraw",
                     "order": 1
                 },
                 "associatedFunction": {
                     "name": "addDeposit",
                     "type": "payable",
-                    "inputValues": []
+                    "inputValues": [
+                        {
+                            "name": "amount",
+                            "type": "wei"
+                        }
+                    ]
                 }
             },
             {
-                "type": "WithdrawForm",
-                "title": "Withdraw Funds",
-                "name": "withdrawForm",
+                "type": "Form",
+                "title": "Withdraw Deposit",
+                "name": "withdrawDepositForm",
                 "props": {
                     "fields": [
                         {
                             "name": "withdrawAddress",
                             "type": "address",
-                            "placeholder": "Withdraw Address"
+                            "label": "Withdraw Address"
                         },
                         {
                             "name": "amount",
                             "type": "number",
-                            "placeholder": "Amount to Withdraw"
+                            "label": "Withdraw Amount (ETH)"
                         }
-                    ]
+                    ],
+                    "submitLabel": "Withdraw"
                 },
                 "placement": {
-                    "section": "Withdraw Funds",
-                    "order": 1
+                    "section": "Deposit and Withdraw",
+                    "order": 2
                 },
                 "associatedFunction": {
                     "name": "withdrawDepositTo",
@@ -169,13 +187,13 @@ export const dummyAiOutput = {
                         },
                         {
                             "name": "amount",
-                            "type": "uint256"
+                            "type": "wei"
                         }
                     ]
                 }
             },
             {
-                "type": "ExecuteTransactionForm",
+                "type": "Form",
                 "title": "Execute Transaction",
                 "name": "executeTransactionForm",
                 "props": {
@@ -183,22 +201,23 @@ export const dummyAiOutput = {
                         {
                             "name": "destination",
                             "type": "address",
-                            "placeholder": "Destination Address"
+                            "label": "Destination Address"
                         },
                         {
                             "name": "value",
                             "type": "number",
-                            "placeholder": "Value in Wei"
+                            "label": "Amount (ETH)"
                         },
                         {
                             "name": "functionData",
                             "type": "text",
-                            "placeholder": "Function Call Data"
+                            "label": "Function Call Data (bytes)"
                         }
-                    ]
+                    ],
+                    "submitLabel": "Execute"
                 },
                 "placement": {
-                    "section": "Execute Transactions",
+                    "section": "Transaction History",
                     "order": 1
                 },
                 "associatedFunction": {
@@ -211,7 +230,7 @@ export const dummyAiOutput = {
                         },
                         {
                             "name": "value",
-                            "type": "uint256"
+                            "type": "wei"
                         },
                         {
                             "name": "func",
@@ -226,34 +245,36 @@ export const dummyAiOutput = {
         {
             "name": "Deposit Workflow",
             "steps": [
-                "User fills out the deposit form.",
-                "User submits the deposit.",
-                "System updates the balance."
+                "User fills in the deposit form.",
+                "User submits the deposit request.",
+                "Contract processes the deposit and updates the account state."
             ]
         },
         {
-            "name": "Withdraw Workflow",
+            "name": "Withdrawal Workflow",
             "steps": [
-                "User fills out the withdraw form.",
-                "User submits the withdraw request.",
-                "System processes the withdrawal."
+                "User fills in the withdrawal form.",
+                "User submits the withdrawal request.",
+                "Contract processes the withdrawal and updates the account state."
             ]
         },
         {
-            "name": "Execute Transaction Workflow",
+            "name": "Transaction Execution Workflow",
             "steps": [
-                "User fills out the execute transaction form.",
-                "User submits the transaction.",
-                "System executes the transaction."
+                "User fills in the execute transaction form.",
+                "User submits the transaction request.",
+                "Contract processes the transaction call to the destination address."
             ]
         }
     ],
     "tokenDetails": {
-        "tokenName": "ExampleToken",
-        "tokenSymbol": "EXT",
-        "decimals": 18,
-        "contractAddress": "0x1234567890abcdef1234567890abcdef12345678",
-        "totalSupply": "1000000"
+        "tokens": [
+            {
+                "name": "Ether",
+                "symbol": "ETH",
+                "decimals": 18
+            }
+        ]
     }
 }
 

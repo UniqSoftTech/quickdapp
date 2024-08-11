@@ -61,7 +61,14 @@ Generate a JSON output with the following structure:
       "title": "", //Brief Title of the function
       "name": "",
       "props": {
-        "fields": [],
+        "fields": [
+          {
+            "name": "",
+            "type": "",
+            "label": "",
+          }
+        ],
+        "submitLabel": "",
         //More necessarry things
       },
       "placement": {
