@@ -5,7 +5,7 @@ import Toast from "@/component/toast";
 type ToastContextType = {
   showToast: (
     message?: string,
-    type?: "success" | "error" | "info" | "loading",
+    type?: "success" | "error" | "info" | "loading" | "airflow" | "airflow-done",
     duration?: number
   ) => void;
 };
@@ -19,14 +19,14 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
     {
       id: number;
       message: string;
-      type: "success" | "error" | "info" | "loading";
+      type: "success" | "error" | "info" | "loading" | "airflow" | "airflow-done";
       duration: number;
     }[]
   >([]);
 
   const showToast = (
     message: string = "",
-    type: "success" | "error" | "info" | 'loading' = "info",
+    type: "success" | "error" | "info" | 'loading' | "airflow" | "airflow-done" = "info",
     duration: number = 3000
   ) => {
     const id = Date.now();

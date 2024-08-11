@@ -55,7 +55,7 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
       dispatch({ model: modelKey, type: ACTION.REQ });
 
       const response = await fetch(
-        "https://quickdapp-api.theoptima.xyz/api" + url,
+        "http://localhost:3001/api" + url,
         {
           method: method,
           mode: "cors",

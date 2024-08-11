@@ -50,10 +50,28 @@ import { ethers } from "ethers";
 import { useToast } from "../context/toast.context";
 import Form, { IFieldProps } from "@/component/form";
 import * as Yup from "yup";
+import { useEffect } from "react";
 
 export default function GetStartedPage() {
   const { fetchRequest, isGenerate, resGenerate } = useApi();
   const { showToast } = useToast();
+
+  useEffect(() => {
+    if (isGenerate) {
+      [
+        "Getting Contract ABI JSON...",
+        "Generating UI design...",
+        "Generating frontend code...",
+        "Deploying...",
+        "Done",
+      ].map(async (message, index) => {
+        await delay(3000 * index);
+        showToast(`${index + 1}/5 ` + message, "airflow");
+        await delay(2000);
+        showToast(`${index + 1}/5 ` + message, "airflow-done");
+      });
+    }
+  }, [isGenerate]);
 
   const validationSchema = {
     address: Yup.string().test(
@@ -112,6 +130,9 @@ export default function GetStartedPage() {
       required: false,
     },
   ];
+
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   async function handleSubmit(e: any) {
     const res = await fetchRequest({

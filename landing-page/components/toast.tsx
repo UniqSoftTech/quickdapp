@@ -4,7 +4,7 @@ import Spinner from "./spinner";
 
 type ToastProps = {
   message: string;
-  type?: "success" | "error" | "info" | "loading";
+  type?: "success" | "error" | "info" | "loading" | "airflow" | "airflow-done";
   duration?: number; // duration in milliseconds
 };
 
@@ -30,6 +30,26 @@ const Toast: React.FC<ToastProps> = ({
       <div className={`${styles.toast} ${styles[type]} flex flex-row gap-2`}>
         {/* <p>{message}</p> */}
         <Spinner />
+      </div>
+    );
+  }
+
+  if (type === "airflow") {
+    return (
+      <div className={`${styles.toast} flex flex-row gap-2 bg-neutral-900 backdrop-blur-2xl`}>
+        <Spinner />
+        <p>{message}</p>
+      </div>
+    );
+  }
+
+  if (type === "airflow-done") {
+    return (
+      <div
+        className={`${styles.toast} flex flex-row gap-2 bg-neutral-900 backdrop-blur-2xl`}
+      >
+        <p>✅</p>
+        <p>{message}</p>
       </div>
     );
   }
