@@ -15,9 +15,11 @@ interface WorkflowSequence {
 }
 
 interface AiOutput {
-  selectedTemplates: Template[];
-  layout: string;
-  workflowSequences: WorkflowSequence[];
+  protocolName: string;
+  selectedTemplates?: Template[];
+  components?: any;
+  layout?: any;
+  workflowSequences?: WorkflowSequence[];
 }
 
 export class FrontendGenerator {
@@ -43,7 +45,7 @@ export class FrontendGenerator {
       await this.createNextJsApp(projectPath);
       await this.createEnvFile(projectPath, contractAddress);
       await this.installDependencies(projectPath);
-      await this.copyTemplateFiles(aiOutput.selectedTemplates, projectPath, title, description, logo);
+      await this.copyTemplateFiles(aiOutput, projectPath, title, description, logo);
       await this.generateAppComponent(aiOutput, contractAddress, contractABI, projectPath, theme);
       await this.configureNextConfig(projectPath, contractAddress);
 
@@ -99,7 +101,7 @@ export class FrontendGenerator {
     }
   }
 
-  private copyTemplateFiles(templates: any, projectPath: string, title: string, description: string, logo: string) {
+  private copyTemplateFiles(aiOutput: any, projectPath: string, title: string, description: string, logo: string) {
     const templateDir = path.join(__dirname, "..", "..", "templates");
 
     const directoriesToCreate = [
@@ -117,7 +119,7 @@ export class FrontendGenerator {
       fs.mkdirSync(path.join(projectPath, dir), { recursive: true });
     });
 
-    templates.forEach((template: Template) => {
+    aiOutput?.selectedTemplates?.forEach((template: Template) => {
       const sourceFile = path.join(
         templateDir,
         template.type,
@@ -138,6 +140,10 @@ export class FrontendGenerator {
       { src: "common/SwapTemplate.tsx", dest: "src/components/common/SwapTemplate.tsx" },
       { src: "common/StakeTemplate.tsx", dest: "src/components/common/StakeTemplate.tsx" },
       { src: "common/MintTemplate.tsx", dest: "src/components/common/MintTemplate.tsx" },
+      { src: "connection/ConnectWalletTemplate.tsx", dest: "src/components/connection/ConnectWalletTemplate.tsx" },
+      { src: "erc20/BalanceDisplayTemplate.tsx", dest: "src/components/erc20/BalanceDisplayTemplate.tsx" },
+      { src: "erc20/TokenTransferTemplate.tsx", dest: "src/components/erc20/TokenTransferTemplate.tsx" },
+      { src: "common/EventListTemplate.tsx", dest: "src/components/common/EventListTemplate.tsx" },
       { src: "styles/public.css", dest: "src/styles/public.css" },
       { src: "utils/colors.tsx", dest: "src/utils/colors.tsx" },
       { src: "utils/functions.tsx", dest: "src/utils/functions.tsx" },
@@ -159,12 +165,14 @@ export class FrontendGenerator {
     this.copyDirectoryRecursive(displaySourceDir, displayDestDir);
 
     // Update Layout.tsx with the logo URL
+    const layoutFilePath = path.join(projectPath, "src", "components", "display", "Layout.tsx");
+    let layoutFileContent = fs.readFileSync(layoutFilePath, 'utf8');
+    const componentLinks = this.generateComponentLinks(aiOutput.components.writeComponents || []);
+    layoutFileContent = layoutFileContent.replace("${componentLinks}", componentLinks);
     if (logo) {
-      const layoutFilePath = path.join(projectPath, "src", "components", "display", "Layout.tsx");
-      let layoutFileContent = fs.readFileSync(layoutFilePath, 'utf8');
       layoutFileContent = layoutFileContent.replace(/src={Logo}/g, `src="${logo}"`);
-      fs.writeFileSync(layoutFilePath, layoutFileContent, 'utf8');
     }
+    fs.writeFileSync(layoutFilePath, layoutFileContent, 'utf8');
 
     // Modify Head.tsx
     this.modifySEOHead(projectPath, title, description);
@@ -227,57 +235,16 @@ export class FrontendGenerator {
   };
 
   private generateAppComponent(aiOutput: any, contractAddress: string, contractABI: any, projectPath: string, theme: string) {
-    const importTemplates = aiOutput.selectedTemplates
-      .map(
-        (t: any) =>
-          `import ${t.id.charAt(0).toUpperCase() + t.id.slice(1)
-          }Template from '../components/${t.type}/${t.id.charAt(0).toUpperCase() + t.id.slice(1)
-          }Template';`
-      )
-      .join("\n");
+    const componentsDir = path.join(projectPath, "src", "components", "generated");
+    if (!fs.existsSync(componentsDir)) {
+      fs.mkdirSync(componentsDir, { recursive: true });
+    }
 
-    const componentTemplates = aiOutput.selectedTemplates
-      .filter((t: any) => t.id !== "connectWallet")
-      .map((t: any) => {
-        if (t.id === "tokenTransfer") {
-          return `
-          <div className="col-span-1">
-          <TokenTransferTemplate
-        onTransfer={async (recipient, amount) => {
-          const contract = getContract();
-          if (contract) {
-            await contract.transfer(recipient, ethers.parseEther(amount));
-          }
-        }}
-        suggestedAmounts={${JSON.stringify(t.props.suggestedAmounts)}}
-      /></div>`;
-        } else if (t.id === "balanceDisplay") {
-          return `<div className="col-span-1"><BalanceDisplayTemplate
-          getBalance={async () => {
-            return "0";
-          }}
-        symbol="${t.props.symbol}"
-      /></div>`;
-        } else if (t.id === "eventList") {
-          return `<div className="col-span-1 md:col-span-2"><EventListTemplate
-          getEvents={async () => {
-            if (contract) {
-              const events = await contract.events.getAllEvents({
-                eventName: "Transfer",
-              });
-              return events.map((event) => ({
-                from: event.data.from,
-                to: event.data.to,
-                value: event.data.value?.toString(),
-              }));
-            }
-            return [];
-          }}
-        eventName="${t.props.eventName}"
-      /></div>`;
-        }
-      })
-      .join("\n          ");
+    aiOutput.components.writeComponents.forEach((component: any) => {
+      const componentContent = this.createFormComponent(component, contractAddress);
+      const componentFilePath = path.join(componentsDir, `${component.name?.toLowerCase()}.tsx`);
+      fs.writeFileSync(componentFilePath, componentContent);
+    });
 
     // Read index.js template and replace placeholders
     const indexTemplate = fs.readFileSync(
@@ -285,10 +252,8 @@ export class FrontendGenerator {
       "utf8"
     );
     const indexContent = indexTemplate
-      .replace("${importTemplates}", importTemplates)
       .replace("${contractABI}", JSON.stringify(contractABI))
       .replace("${contractAddress}", contractAddress)
-      .replace("${componentTemplates}", componentTemplates);
 
     // Ensure the 'src/pages' directory exists
     fs.mkdirSync(path.join(projectPath, "src", "pages"), { recursive: true });
@@ -302,16 +267,16 @@ export class FrontendGenerator {
     );
     fs.writeFileSync(path.join(projectPath, "src", "pages", "_app.tsx"), appTemplate);
 
-    const sourceSwapFilePath = path.join(__dirname, "..", "..", "templates", "pages", "swap.tsx");
-    const targetSwapFilePath = path.join(projectPath, "src", "pages", "swap.tsx");
-    const targetSwapDir = path.dirname(targetSwapFilePath);
-    if (!fs.existsSync(targetSwapDir)) {
-      fs.mkdirSync(targetSwapDir, { recursive: true });
-    }
-    fs.copyFileSync(sourceSwapFilePath, targetSwapFilePath);
+    // const sourceSwapFilePath = path.join(__dirname, "..", "..", "templates", "pages", "swap.tsx");
+    // const targetSwapFilePath = path.join(projectPath, "src", "pages", "swap.tsx");
+    // const targetSwapDir = path.dirname(targetSwapFilePath);
+    // if (!fs.existsSync(targetSwapDir)) {
+    //   fs.mkdirSync(targetSwapDir, { recursive: true });
+    // }
+    // fs.copyFileSync(sourceSwapFilePath, targetSwapFilePath);
 
-    const sourceTransferFilePath = path.join(__dirname, "..", "..", "templates", "pages", "transfer.tsx");
-    const targetTransferFilePath = path.join(projectPath, "src", "pages", "transfer.tsx");
+    const sourceTransferFilePath = path.join(__dirname, "..", "..", "templates", "pages", "[slug].tsx");
+    const targetTransferFilePath = path.join(projectPath, "src", "pages", "[slug].tsx");
     const targetTransferDir = path.dirname(targetTransferFilePath);
     if (!fs.existsSync(targetTransferDir)) {
       fs.mkdirSync(targetTransferDir, { recursive: true });
@@ -333,38 +298,73 @@ export class FrontendGenerator {
     }
   }
 
-  // Use after completed ai generation
-  private generatePageComponent = (
-    pageName: string,
-    templateName: string,
-    requestNeeded: boolean = false,
-    templateType: string,
-  ) => {
-    const requestCode = requestNeeded
-      ? `
-      const { trigger } = useRequest("toptokens", "GET", "contract/top-tokens", {}, false);
-
-      useEffect(() => {
-        trigger();
-      }, []);
-      `
-      : "";
+  private createFormComponent(form: any, contractAddress: string) {
+    const fields = form?.props?.fields?.map((field: any) => {
+      return `
+          <div key="${field.name}" className="flex flex-col max-w-full gap-3 p-4 bg-neutral-800 rounded-xl">
+            <h2 className="text-neutral-500">${field.label}</h2>
+            <input
+              className="flex-grow w-full min-w-0 text-2xl font-semibold text-right bg-transparent outline-none"
+              placeholder="${field.type === 'address' ? '0x0...' : '0'}"
+              value={formValues.${field.name} || ""}
+              type="${field.type === 'wei' ? 'number' : 'text'}"
+              onChange={(e) => setFormValues({ ...formValues, ${field.name}: e.target.value })}
+              style={{ direction: 'ltr' }}
+            />
+          </div>`;
+    })
+      .join("\n");
 
     return `
-    import React, { useEffect } from "react";
-    import ${templateName} from "@/components/${templateType}/${templateName}";
-    import useRequest from "@/hooks/useRequest";
-
-    const ${pageName}: React.FC = () => {
-      ${requestCode}
+    import React, { useState } from 'react';
+    import { useContract } from '@thirdweb-dev/react';
+    import { ethers } from 'ethers';
+    import Button from '../display/Button';
+  
+    const ${form.name}: React.FC = () => {
+      const { contract } = useContract('${contractAddress}');
+      const [formValues, setFormValues] = useState<any>({});
+  
+      const handleSubmit = async () => {
+        const inputs = [${form.associatedFunction.inputValues.map((input: any) => {
+      if (input.type === 'wei') {
+        return `ethers.utils.parseUnits(formValues.${input.name}, 18)`;
+      }
+      return `formValues.${input.name}`;
+    }).join(', ')}];
+  
+        await contract.call('${form.associatedFunction.name}', inputs);
+      };
+  
       return (
-        <div className="flex items-center justify-center md:pt-20">
-          <${templateName} />
+        <div className="flex flex-col w-full max-w-xl gap-5 p-6 rounded-3xl bg-neutral-950">
+          <div className="text-xl font-semibold">${form.props.submitLabel}</div>
+          <div className="flex flex-col gap-3">
+            ${fields}
+            <Button onClick={handleSubmit} title="${form.props.submitLabel}" />
+          </div>
         </div>
       );
     };
-
-    export default ${pageName};
+  
+    export default ${form.name};
     `;
+  }
+
+  private generateComponentLinks = (components: any[]) => {
+    return components?.map(component => {
+      if (component?.associatedFunction?.inputValues?.length > 0) {
+        const name = component?.name || 'Unnamed';
+        const title = component?.title || 'Unnamed';
+        return `
+          <Link href="/${name.toLowerCase()}" passHref>
+            <p className="text-white cursor-pointer hover:text-gray-400">
+              ${title}
+            </p>
+          </Link>
+        `;
+      }
+    })
+      .join("\n");
   };
 }

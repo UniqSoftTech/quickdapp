@@ -13,17 +13,16 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const address = useAddress();
-  const [visible, setVisible] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="relative flex flex-col min-h-screen overflow-hidden bg-neutral-900">
-      {/* Background blur elements */}
-      <div className="absolute h-2/3 w-1/3 bg-white z-0 right-[-50px] top-[-100px] rounded-full bg-gradient-to-r from-primary brightness-75 to-primary opacity-20 blur-3xl overflow-hidden pointer-events-none" />
-      <div className="absolute h-2/3 w-1/3 bg-white z-0 left-[-100px] bottom-[-200px] rounded-full bg-gradient-to-r from-primary brightness-75 to-primary opacity-20 blur-3xl overflow-hidden pointer-events-none" />
-
-      {/* Header */}
-      <header className="relative z-10 flex items-center justify-between w-full px-6 py-3">
-        <div className="flex items-center gap-3">
+    <div className="relative flex min-h-screen overflow-hidden bg-neutral-900">
+      <aside
+        className={`fixed inset-y-0 left-0 z-20 w-64 bg-neutral-800 transition-transform transform ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:relative md:translate-x-0`}
+      >
+        <div className="flex flex-col h-full p-6">
           <Link href="/" passHref>
             <Image
               src={Logo}
@@ -33,51 +32,44 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               height={20}
             />
           </Link>
-          <nav className="items-center hidden gap-4 ml-6 md:flex">
-            <Link href="/" passHref>
-              <p className="text-white cursor-pointer hover:text-gray-400">
-                Transfer
-              </p>
-            </Link>
-            <Link href="/swap" passHref>
-              <p className="text-white cursor-pointer hover:text-gray-400">
-                Swap
-              </p>
-            </Link>
-            <Link href="/stake" passHref>
-              <p className="text-white cursor-pointer hover:text-gray-400">
-                Stake
-              </p>
-            </Link>
-            <Link href="/mint" passHref>
-              <p className="text-white cursor-pointer hover:text-gray-400">
-                Mint
-              </p>
-            </Link>
-            <Link href="/transfer" passHref>
-              <p className="text-white cursor-pointer hover:text-gray-400">
-                Transfer History
-              </p>
-            </Link>
+          <nav className="flex flex-col gap-4 mt-10">
+            ${componentLinks}
           </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <button onClick={() => setVisible(true)} className="md:hidden">
-            <Bars3Icon className="w-6 h-6 text-gray-500" />
-          </button>
-          <div className="hidden md:block">
+          <div className="mt-auto">
             <ConnectWalletTemplate />
           </div>
         </div>
-      </header>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex flex-col flex-grow">
+        {/* Background blur elements */}
+        <div className="absolute h-2/3 w-1/3 bg-white z-0 right-[-50px] top-[-100px] rounded-full bg-gradient-to-r from-primary brightness-75 to-primary opacity-20 blur-3xl overflow-hidden pointer-events-none" />
+        <div className="absolute h-2/3 w-1/3 bg-white z-0 left-[-100px] bottom-[-200px] rounded-full bg-gradient-to-r from-primary brightness-75 to-primary opacity-20 blur-3xl overflow-hidden pointer-events-none" />
+
+        {/* Header */}
+        <header className="relative z-10 flex items-center justify-between w-full px-6 py-3">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="md:hidden"
+          >
+            <Bars3Icon className="w-6 h-6 text-gray-500" />
+          </button>
+          <div className="flex items-center gap-3 md:gap-6">
+            <div className="md:hidden">
+              <ConnectWalletTemplate />
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="relative z-10 flex-grow p-4 text-white">
+          {children}
+        </main>
+      </div>
 
       {/* Side Drawer */}
-      <SideDrawer isOpen={visible} onClose={() => setVisible(false)} />
-
-      {/* Main Content */}
-      <main className="container relative z-10 flex-grow p-4 mx-auto text-white">
-        {children}
-      </main>
+      <SideDrawer isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </div>
   );
 };
