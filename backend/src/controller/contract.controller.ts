@@ -76,4 +76,24 @@ export class ContractController {
       send({ res, err, message: `Failed to get top tokens`, success: false });
     }
   }
+
+  async getBalance(req: Request, res: Response): Promise<void> {
+    try {
+      const { address } = req.body;
+      const result = await this.alchemyService.getTokenBalances(address);
+      send({ res, result });
+    } catch (err: Error | any) {
+      send({ res, err, message: `Failed to get top tokens`, success: false });
+    }
+  }
+
+  async getTransactions(req: Request, res: Response): Promise<void> {
+    try {
+      const { address } = req.body;
+      const result = await this.blocksoutService.getTransactions(address);
+      send({ res, result });
+    } catch (err: Error | any) {
+      send({ res, err, message: `Failed to get top tokens`, success: false });
+    }
+  }
 }

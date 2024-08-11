@@ -39,4 +39,14 @@ export class BlockscoutService {
       throw error;
     }
   }
+
+  async getTransactions(address: string): Promise<any> {
+    try {
+      return await fetch(`https://base.blockscout.com/api/v2/addresses/${address}/transactions?filter=to%20%7C%20from`, {
+        method: "GET",
+      }).then((res) => res.json());
+    } catch (err: Error | any) {
+      throw err;
+    }
+  }
 }

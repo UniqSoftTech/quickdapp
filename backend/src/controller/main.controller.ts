@@ -15,12 +15,28 @@ export class MainController {
 
   async buildApp(req: Request, res: Response): Promise<void> {
     try {
-      const { contract_address, title, description, theme, logo } = req.body;
+      const { contract_address, title, description, theme, logo, promt_txt } = req.body;
       const abiResponse = await this.blocksoutService.getABI(contract_address);
-      const abi = JSON.parse(abiResponse.result); // Parse the ABI string to an object
+      const abi = JSON.parse(abiResponse.result);
 
       const result = await this.frontendGeneratorService.generateFrontend(dummyAiOutput, contract_address, abi, title, description, theme, logo);
 
+      send({
+        res, message: "Frontend generated successfully", result,
+      });
+    } catch (err) {
+      send({
+        res, err, message: "Failed to generate frontend", success: false
+      });
+    }
+  }
+
+
+  async generateApp(req: Request, res: Response): Promise<void> {
+    try {
+      const { contract_address, title, description, theme, logo, dummyAiOutput, abi } = req.body;
+
+      const result = await this.frontendGeneratorService.generateFrontend(dummyAiOutput, contract_address, abi, title, description, theme, logo);
       send({
         res, message: "Frontend generated successfully", result,
       });
