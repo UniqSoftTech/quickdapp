@@ -142,7 +142,7 @@ export class FrontendGenerator {
       { src: "utils/colors.tsx", dest: "src/utils/colors.tsx" },
       { src: "utils/functions.tsx", dest: "src/utils/functions.tsx" },
       { src: "utils/logo.svg", dest: "public/logo.svg" },
-      { src: "utils/favicon.ico", dest: "public/favicon.ico"},
+      { src: "utils/favicon.ico", dest: "public/favicon.ico" },
       { src: "hooks/api.tsx", dest: "src/hooks/api.tsx" },
       { src: "hooks/useGlobalRequestStore.tsx", dest: "src/hooks/useGlobalRequestStore.tsx" },
       { src: "hooks/useRequest.tsx", dest: "src/hooks/useRequest.tsx" },
@@ -332,4 +332,38 @@ export class FrontendGenerator {
       console.log("src/app directory removed successfully.");
     }
   }
+
+  // Use after completed ai generation
+  private generatePageComponent = (
+    pageName: string,
+    templateName: string,
+    requestNeeded: boolean = false
+  ) => {
+    const requestCode = requestNeeded
+      ? `
+      const { trigger } = useRequest("toptokens", "GET", "contract/top-tokens", {}, false);
+
+      useEffect(() => {
+        trigger();
+      }, []);
+      `
+      : "";
+
+    return `
+    import React, { useEffect } from "react";
+    import ${templateName} from "@/components/common/${templateName}";
+    import useRequest from "@/hooks/useRequest";
+
+    const ${pageName}: React.FC = () => {
+      ${requestCode}
+      return (
+        <div className="flex items-center justify-center md:pt-20">
+          <${templateName} />
+        </div>
+      );
+    };
+
+    export default ${pageName};
+    `;
+  };
 }
