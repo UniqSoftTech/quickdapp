@@ -11,28 +11,49 @@ async function processWithOpenAI(inputJson, prompt, maxTokens = 10000) {
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: `Your task is to:
-1. Analyze all contract ABIs and source codes to identify public and external functions, state variables, events, and internal logic.
-2. Determine relationships between contracts based on inheritance, function calls, and other interactions visible in the source code.
-3. Identify how contracts interact with the listed tokens and any additional tokens found in the source code or ABIs.
-4. Recognize common DeFi patterns such as lending, borrowing, staking, or swapping by analyzing the contract logic.
-5. Fetch basic information (name, symbol, decimals) for all tokens, including those not initially listed but referenced in contracts.
-6. Identify any security measures, access controls, or upgradeability patterns in the contracts.
-7. Detect any oracle usage or external data dependencies.
-8. Analyze the overall protocol architecture and key components based on the contract interactions and logic.
-9. Create a JSON output that includes:
-   - Detailed information about each contract, its functions, state variables, and key logic flows
-   - Token details
-   - Relationships between contracts and tokens
-   - Protocol-specific features, patterns, or unique aspects identified
-   - Security considerations or potential areas of concern
-   - A high-level overview of the protocol's architecture and main components
+        { role: "system", content: `You are an expert frontend React engineer and UI/UX designer. Analyze the provided ABI json and contract source code to create a structured JSON for our frontend generator. This generator will automatically create a React-based frontend for the given contract. Follow these guidelines:
 
-The output should be structured to allow easy generation of a dynamic user interface, facilitate complex multi-contract operations, and provide insights into the protocol's functionality and security aspects.
+Identify the main features and user interactions in the contracts.
+Design a logical layout and component structure for the DApp.
+Specify UI components, their properties, and exact placement within the layout.
+Define workflow sequences for key user interactions.
+Include token details if relevant.
 
-Provide your analysis and the resulting JSON output, ensuring it's general enough to work for various DeFi protocols like Uniswap, AAVE, Maker, or Lido, while also capturing the unique aspects of this specific protocol.
-
-Please process this JSON according to the prompt and return the result as valid JSON.` },
+Generate a JSON output with the following structure:
+{
+"protocolName": "",
+"protocolDescription": "",
+"mainFeatures": [],
+"layout": {
+"navbar": {},
+"sidebar": {},
+"main": {
+"sections": []
+},
+"footer": {}
+},
+"components": [
+{
+"type": "",
+"name": "",
+"props": {},
+"placement": {
+"section": "",
+"order": 0
+},
+"associatedFunction": ""
+}
+],
+"workflows": [
+{
+"name": "",
+"steps": []
+}
+],
+"tokenDetails": {}
+}
+Ensure each component is linked to a specific contract function and placed within the layout. Focus on creating an intuitive, functional UI without including the ABI or detailed function parameters. The JSON should provide clear instructions for the frontend generator to create and position React components.
+DO NOT START WITH '\\\json' or '\\\`, just give the JSON.` },
         { role: "user", content: prompt }
       ],
       temperature: 0.7,
