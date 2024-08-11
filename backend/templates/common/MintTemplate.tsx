@@ -7,6 +7,14 @@ interface MintTemplateProps {
 }
 
 const MintTemplate: React.FC<MintTemplateProps> = ({ eventName }) => {
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const handleQuantity = (type: string) => {
+    if (type === "plus") setQuantity((prevQuantity) => prevQuantity + 1);
+    else
+      setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  };
+
   return (
     <div className="flex flex-col w-full max-w-xl gap-5 p-6 bg-neutral-950 rounded-3xl">
       <div className="text-xl font-semibold">Mint</div>
@@ -21,11 +29,11 @@ const MintTemplate: React.FC<MintTemplateProps> = ({ eventName }) => {
               <h2 className="text-xl font-semibold text-white">0.00058 ETH</h2>
             </div>
             <div className="flex items-center gap-4 p-2 bg-neutral-950 rounded-xl">
-              <button>
+              <button onClick={() => handleQuantity("minus")}>
                 <MinusIcon className="w-5 h-5" />
               </button>
-              <p>1</p>
-              <button>
+              <p className="text-xl font-semibold">{quantity}</p>
+              <button onClick={() => handleQuantity("plus")}>
                 <PlusIcon className="w-5 h-5" />
               </button>
             </div>
@@ -44,7 +52,10 @@ const MintTemplate: React.FC<MintTemplateProps> = ({ eventName }) => {
             <h2>$ 0.54</h2>
           </div>
         </div>
-        <Button onClick={() => console.log("uildel")} title={"Mint"} />
+        <Button
+          onClick={() => console.log("Mint button clicked")}
+          title={"Mint"}
+        />
       </div>
     </div>
   );

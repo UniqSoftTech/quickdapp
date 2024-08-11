@@ -16,7 +16,6 @@ const TokenTransferTemplate: React.FC<TokenTransferTemplateProps> = ({
   const { publicRuntimeConfig } = getConfig();
   const { contractAddress } = publicRuntimeConfig;
   const { contract } = useContract(contractAddress);
-  console.log("🚀 ~ contract:", contract);
 
   const [amount, setAmount] = useState<string>("");
   const [recipient, setRecipient] = useState<string>("");
@@ -83,6 +82,7 @@ const TokenTransferTemplate: React.FC<TokenTransferTemplateProps> = ({
               className="flex-grow w-full min-w-0 text-2xl font-semibold text-right bg-transparent outline-none"
               placeholder="0"
               value={amount}
+              type="number"
               onChange={(e) => setAmount(e.target.value)}
               style={{ direction: "ltr" }}
             />

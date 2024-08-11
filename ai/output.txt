@@ -1,242 +1,139 @@
 ```json
 {
   "protocolName": "ExampleProtocol",
-  "chain": "base",
-  "contracts": [
-    {
-      "name": "ERC1967Proxy",
-      "isVerified": true,
-      "sourceCode": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v4.7.0) (proxy/ERC1967/ERC1967Proxy.sol)\n\npragma solidity ^0.8.0;\n\nimport \"../Proxy.sol\";\nimport \"./ERC1967Upgrade.sol\";\n\n/**\n * @dev This contract implements an upgradeable proxy...\n */\ncontract ERC1967Proxy is Proxy, ERC1967Upgrade {\n    constructor(address _logic, bytes memory _data) payable {\n        _upgradeToAndCall(_logic, _data, false);\n    }\n\n    function _implementation() internal view virtual override returns (address impl) {\n        return ERC1967Upgrade._getImplementation();\n    }\n}\n",
-      "abi": [
-        {
-          "type": "constructor",
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "_logic",
-              "type": "address"
-            },
-            {
-              "internalType": "bytes",
-              "name": "_data",
-              "type": "bytes"
-            }
-          ],
-          "stateMutability": "payable"
-        },
-        {
-          "type": "event",
-          "name": "AdminChanged",
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "previousAdmin",
-              "type": "address",
-              "indexed": false
-            },
-            {
-              "internalType": "address",
-              "name": "newAdmin",
-              "type": "address",
-              "indexed": false
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "Upgraded",
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "implementation",
-              "type": "address",
-              "indexed": true
-            }
-          ]
-        },
-        {
-          "type": "fallback",
-          "stateMutability": "payable"
-        },
-        {
-          "type": "receive",
-          "stateMutability": "payable"
-        }
-      ],
-      "relationships": {
-        "inheritsFrom": ["Proxy", "ERC1967Upgrade"],
-        "interactions": []
-      }
-    },
-    {
-      "name": "SimpleAccount",
-      "isVerified": true,
-      "sourceCode": "// SPDX-License-Identifier: GPL-3.0\npragma solidity ^0.8.12;\n\nimport \"@openzeppelin/contracts/utils/cryptography/ECDSA.sol\";\nimport \"@openzeppelin/contracts/proxy/utils/Initializable.sol\";\nimport \"@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol\";\n\n/* solhint-disable avoid-low-level-calls */\n\n/**\n  * minimal account.\n  *  this is sample minimal account.\n  */\ncontract SimpleAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {\n...\n}\n",
-      "abi": [
-        {
-          "type": "constructor",
-          "inputs": [
-            {
-              "internalType": "contract IEntryPoint",
-              "name": "anEntryPoint",
-              "type": "address"
-            }
-          ],
-          "stateMutability": "nonpayable"
-        },
-        {
-          "type": "event",
-          "name": "SimpleAccountInitialized",
-          "inputs": [
-            {
-              "internalType": "contract IEntryPoint",
-              "name": "entryPoint",
-              "type": "address",
-              "indexed": true
-            },
-            {
-              "internalType": "address",
-              "name": "owner",
-              "type": "address",
-              "indexed": true
-            }
-          ]
-        },
-        {
-          "type": "function",
-          "name": "execute",
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "dest",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes",
-              "name": "func",
-              "type": "bytes"
-            }
-          ],
-          "outputs": [],
-          "stateMutability": "nonpayable"
-        },
-        {
-          "type": "function",
-          "name": "getDeposit",
-          "inputs": [],
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view"
-        },
-        {
-          "type": "function",
-          "name": "addDeposit",
-          "inputs": [],
-          "outputs": [],
-          "stateMutability": "payable"
-        },
-        {
-          "type": "function",
-          "name": "withdrawDepositTo",
-          "inputs": [
-            {
-              "internalType": "address payable",
-              "name": "withdrawAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            }
-          ],
-          "outputs": [],
-          "stateMutability": "nonpayable"
-        },
-        {
-          "type": "function",
-          "name": "initialize",
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "anOwner",
-              "type": "address"
-            }
-          ],
-          "outputs": [],
-          "stateMutability": "nonpayable"
-        },
-        {
-          "type": "function",
-          "name": "owner",
-          "inputs": [],
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "stateMutability": "view"
-        }
-      ],
-      "relationships": {
-        "inheritsFrom": ["BaseAccount", "TokenCallbackHandler", "UUPSUpgradeable", "Initializable"],
-        "interactions": [
-          {
-            "contract": "ERC1967Proxy",
-            "methods": ["execute", "addDeposit", "withdrawDepositTo"]
-          }
-        ]
-      }
-    }
+  "protocolDescription": "A protocol implementing an upgradeable proxy pattern with a minimal account interface for executing transactions.",
+  "mainFeatures": [
+    "Upgradeable contracts via ERC1967Proxy",
+    "Simple account management with execute and batch execute functions",
+    "Deposit and withdrawal functionalities",
+    "Event logging for key actions including upgrades and account initialization"
   ],
-  "tokens": [],
-  "security": {
-    "accessControls": [
-      {
-        "contract": "SimpleAccount",
-        "method": "onlyOwner",
-        "description": "Restricts access to owner only for certain functions."
-      },
-      {
-        "contract": "ERC1967Proxy",
-        "description": "Uses upgradeable proxy pattern to enable contract upgrades."
-      }
-    ],
-    "upgradeability": {
-      "pattern": "UUPS",
-      "description": "Allows the contract to be upgraded through the `upgradeTo` method."
+  "layout": {
+    "navbar": {
+      "logo": "ExampleProtocol",
+      "links": [
+        { "name": "Home", "path": "/" },
+        { "name": "Dashboard", "path": "/dashboard" },
+        { "name": "Account", "path": "/account" },
+        { "name": "Documentation", "path": "/docs" }
+      ]
+    },
+    "sidebar": {
+      "sections": [
+        { "name": "Transactions", "links": [{ "name": "Execute", "path": "/execute" }, { "name": "Batch Execute", "path": "/batch-execute" }] },
+        { "name": "Account", "links": [{ "name": "Deposit", "path": "/deposit" }, { "name": "Withdraw", "path": "/withdraw" }] }
+      ]
+    },
+    "main": {
+      "sections": [
+        { "name": "Dashboard Overview", "content": "Displays account balance, recent transactions, and quick actions." },
+        { "name": "Account Management", "content": "Interface for managing account details and executing transactions." }
+      ]
+    },
+    "footer": {
+      "links": [
+        { "name": "Privacy Policy", "path": "/privacy" },
+        { "name": "Terms of Service", "path": "/terms" }
+      ]
     }
   },
-  "protocolArchitecture": {
-    "components": [
-      {
-        "name": "ERC1967Proxy",
-        "description": "A proxy for upgrading contracts."
-      },
-      {
-        "name": "SimpleAccount",
-        "description": "A minimal account contract with deposit management and transaction execution."
-      }
-    ],
-    "interactions": [
-      {
-        "from": "SimpleAccount",
-        "to": "ERC1967Proxy",
-        "description": "Uses the proxy for executing transactions."
-      }
-    ]
+  "components": [
+    {
+      "type": "Button",
+      "name": "Execute Transaction",
+      "props": { "onClick": "executeTransaction", "label": "Execute" },
+      "placement": { "section": "Account Management", "order": 1 },
+      "associatedFunction": "execute"
+    },
+    {
+      "type": "Button",
+      "name": "Batch Execute",
+      "props": { "onClick": "executeBatchTransaction", "label": "Batch Execute" },
+      "placement": { "section": "Account Management", "order": 2 },
+      "associatedFunction": "executeBatch"
+    },
+    {
+      "type": "Input",
+      "name": "Deposit Amount",
+      "props": { "type": "number", "placeholder": "Enter amount to deposit" },
+      "placement": { "section": "Account Management", "order": 3 },
+      "associatedFunction": "addDeposit"
+    },
+    {
+      "type": "Button",
+      "name": "Deposit",
+      "props": { "onClick": "depositFunds", "label": "Deposit" },
+      "placement": { "section": "Account Management", "order": 4 },
+      "associatedFunction": "addDeposit"
+    },
+    {
+      "type": "Input",
+      "name": "Withdraw Amount",
+      "props": { "type": "number", "placeholder": "Enter amount to withdraw" },
+      "placement": { "section": "Account Management", "order": 5 },
+      "associatedFunction": "withdrawDepositTo"
+    },
+    {
+      "type": "Button",
+      "name": "Withdraw",
+      "props": { "onClick": "withdrawFunds", "label": "Withdraw" },
+      "placement": { "section": "Account Management", "order": 6 },
+      "associatedFunction": "withdrawDepositTo"
+    },
+    {
+      "type": "Card",
+      "name": "Account Balance",
+      "props": { "value": "getDeposit" },
+      "placement": { "section": "Dashboard Overview", "order": 1 },
+      "associatedFunction": "getDeposit"
+    },
+    {
+      "type": "Card",
+      "name": "Transaction History",
+      "props": { "transactions": "fetchTransactions" },
+      "placement": { "section": "Dashboard Overview", "order": 2 },
+      "associatedFunction": "fetchTransactions"
+    }
+  ],
+  "workflows": [
+    {
+      "name": "Execute Transaction Workflow",
+      "steps": [
+        "User enters transaction details in input fields.",
+        "User clicks Execute button.",
+        "Transaction is submitted to the execute function on the contract."
+      ]
+    },
+    {
+      "name": "Batch Execute Workflow",
+      "steps": [
+        "User enters details for multiple transactions.",
+        "User clicks Batch Execute button.",
+        "Batch transaction is submitted to the executeBatch function on the contract."
+      ]
+    },
+    {
+      "name": "Deposit Workflow",
+      "steps": [
+        "User enters deposit amount in the deposit input field.",
+        "User clicks Deposit button.",
+        "Deposit transaction is submitted to the addDeposit function on the contract."
+      ]
+    },
+    {
+      "name": "Withdraw Workflow",
+      "steps": [
+        "User enters withdrawal amount in the withdraw input field.",
+        "User clicks Withdraw button.",
+        "Withdrawal transaction is submitted to the withdrawDepositTo function on the contract."
+      ]
+    }
+  ],
+  "tokenDetails": {
+    "name": "ExampleToken",
+    "symbol": "EXTK",
+    "decimals": 18,
+    "contractAddress": "0x1234567890abcdef1234567890abcdef12345678"
   }
 }
 ```

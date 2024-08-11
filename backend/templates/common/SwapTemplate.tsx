@@ -90,6 +90,7 @@ const SwapTemplate: React.FC<SwapTemplateProps> = ({ functionName }) => {
                   amount: e.target.value,
                 })
               }
+              type="number"
               value={selectedSellCoin.amount}
               style={{ direction: "ltr" }}
             />
@@ -140,6 +141,7 @@ const SwapTemplate: React.FC<SwapTemplateProps> = ({ functionName }) => {
             <input
               className="flex-grow w-full min-w-0 text-2xl font-semibold text-right bg-transparent outline-none"
               placeholder="0"
+              type="number"
               onChange={(e) =>
                 setSelectedBuyCoin({
                   ...selectedBuyCoin,
