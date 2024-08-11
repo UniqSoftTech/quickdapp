@@ -2,18 +2,20 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import React, { useState, ChangeEvent } from "react";
 
 interface SearchInputProps {
-  onSearch: (query: string) => void;
+  onSearch?: (query: string) => void;
+  onChange: (e: string) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ onSearch, onChange }) => {
   const [query, setQuery] = useState<string>("");
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
+    onChange(event.target.value);
   };
 
   const handleSearch = () => {
-    onSearch(query);
+    onSearch?.(query);
   };
 
   return (

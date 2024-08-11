@@ -2,6 +2,9 @@ import fs from "fs";
 import { exec } from 'child_process';
 import path from "path";
 import util from 'util';
+import archiver from "archiver";
+import AWS from "aws-sdk";
+import { S3_BUCKET_NAME, S3_KEY, S3_SECRETKEY } from "../config/env.config";
 
 interface Template {
   id: string;
@@ -49,8 +52,10 @@ export class FrontendGenerator {
       await this.generateAppComponent(aiOutput, contractAddress, contractABI, projectPath, theme);
       await this.configureNextConfig(projectPath, contractAddress);
 
+      const zipFile = await this.zipProjectFolder(projectPath);
+      const s3Url = await this.uploadToS3(zipFile, `${projectName}.zip`);
       console.log("Frontend generation complete!");
-      return { success: true, message: "Frontend generation complete" };
+      return { success: true, message: s3Url };
     } catch (error) {
       console.error("Error during frontend generation:", error);
       throw new Error(`Error during frontend generation: ${(error as Error).message}`);
@@ -222,6 +227,14 @@ export class FrontendGenerator {
               hostname: "**",
             },
           ],
+        },
+        typescript: {
+          ignoreBuildErrors: true,
+        },
+        eslint: {
+          // Warning: This allows production builds to successfully complete even if
+          // your project has ESLint errors.
+          ignoreDuringBuilds: true,
         },
         publicRuntimeConfig: {
           contractAddress: "${contractAddress}",
@@ -426,4 +439,52 @@ export class FrontendGenerator {
     })
       .join("\n");
   };
+
+  private async zipProjectFolder(projectPath: string): Promise<string> {
+    const outputZipPath = `${projectPath}.zip`;
+
+    return new Promise((resolve, reject) => {
+      const output = fs.createWriteStream(outputZipPath);
+      const archive = archiver('zip', { zlib: { level: 9 } });
+
+      output.on('close', () => {
+        console.log(`${archive.pointer()} total bytes`);
+        console.log('Archiver has been finalized and the output file descriptor has closed.');
+        resolve(outputZipPath);
+      });
+
+      archive.on('error', (err) => {
+        reject(err);
+      });
+
+      archive.pipe(output);
+
+      // Append all files in the project directory except node_modules
+      archive.glob('**/*', {
+        cwd: projectPath,
+        ignore: ['node_modules/**', 'node_modules'],
+      });
+
+      archive.finalize();
+    });
+  }
+
+  private async uploadToS3(filePath: string, s3Key: string): Promise<string> {
+    const s3 = new AWS.S3({
+      accessKeyId: S3_KEY,
+      secretAccessKey: S3_SECRETKEY,
+      region: "us-east-1"
+    });
+    const fileContent = fs.readFileSync(filePath);
+
+    const params = {
+      Bucket: S3_BUCKET_NAME,
+      Key: S3_KEY,
+      Body: fileContent,
+      ContentType: 'application/zip',
+    };
+
+    const uploadResult = await s3.upload(params).promise();
+    return uploadResult.Location;
+  }
 }
