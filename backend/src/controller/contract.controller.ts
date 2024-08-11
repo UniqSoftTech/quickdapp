@@ -51,7 +51,9 @@ export class ContractController {
         return failed({ res, message: "Invalid address" });
 
       const result = await this.blocksoutService.getABI(address).then((res) => JSON.parse(res.result));
-      send({ res, result });
+      send({ res, result: {
+        abi: result
+      } });
     } catch (err: Error | any) {
       send({ res, err, message: `Failed to get ABI for contract ${req.body.address}`, success: false });
     }
@@ -64,6 +66,14 @@ export class ContractController {
       send({ res, result });
     } catch (err: Error | any) {
       send({ res, err, message: `Failed to search tokens`, success: false });
+    }
+  }
+
+  async getNetworks(req: Request, res: Response): Promise<void> {
+    try {
+      send({ res, result: topTokens });
+    } catch (err: Error | any) {
+      send({ res, err, message: `Failed to get top tokens`, success: false });
     }
   }
 }

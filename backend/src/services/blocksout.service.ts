@@ -1,15 +1,21 @@
 import { BLOCKSCOUT_URL } from "../config/env.config";
 
+
+export interface IGetABIResponse {
+  message: string;
+  result:  string;
+  status:  string;
+}
+
 export class BlockscoutService {
-  private url = {
-    ETH: "https://eth-sepolia.blockscout.com/api/?module=contract&action=listcontracts",
+  private URL = {
+    BASE: "https://base.blockscout.com/api/api?module=contract&action=getabi&address=",
   }
 
   async getABI(contractAddress: string): Promise<any> {
-    const url = `${BLOCKSCOUT_URL}/api?module=contract&action=getabi&address=${contractAddress}`;
-
     try {
-      const response = await fetch(url);
+      const response = await fetch(this.URL.BASE + contractAddress);
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
