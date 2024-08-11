@@ -337,7 +337,8 @@ export class FrontendGenerator {
   private generatePageComponent = (
     pageName: string,
     templateName: string,
-    requestNeeded: boolean = false
+    requestNeeded: boolean = false,
+    templateType: string,
   ) => {
     const requestCode = requestNeeded
       ? `
@@ -351,7 +352,7 @@ export class FrontendGenerator {
 
     return `
     import React, { useEffect } from "react";
-    import ${templateName} from "@/components/common/${templateName}";
+    import ${templateName} from "@/components/${templateType}/${templateName}";
     import useRequest from "@/hooks/useRequest";
 
     const ${pageName}: React.FC = () => {
