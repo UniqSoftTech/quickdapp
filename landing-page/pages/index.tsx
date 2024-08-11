@@ -120,6 +120,7 @@ export default function GetStartedPage() {
       model: "Generate",
       body: {
         contract_address: e?.address,
+        promt_txt: e.promt_txt,
         description: e.desc,
         title: e.title,
         theme: e.color,
