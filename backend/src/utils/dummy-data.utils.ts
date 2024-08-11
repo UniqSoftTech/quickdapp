@@ -1,50 +1,3 @@
-export const dummyAbi = [
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "name",
-    "outputs": [{ "name": "", "type": "string" }],
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "symbol",
-    "outputs": [{ "name": "", "type": "string" }],
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "decimals",
-    "outputs": [{ "name": "", "type": "uint8" }],
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [{ "name": "_owner", "type": "address" }],
-    "name": "balanceOf",
-    "outputs": [{ "name": "balance", "type": "uint256" }],
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [{ "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }],
-    "name": "transfer",
-    "outputs": [{ "name": "", "type": "bool" }],
-    "type": "function"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      { "indexed": true, "name": "from", "type": "address" },
-      { "indexed": true, "name": "to", "type": "address" },
-      { "indexed": false, "name": "value", "type": "uint256" }
-    ],
-    "name": "Transfer",
-    "type": "event"
-  }
-]
 
 export const dummyAiOutput = {
   "selectedTemplates": [
@@ -93,6 +46,7 @@ export const topTokens = [
       "name": "Wrapped Ether",
       "decimals": 18,
       "standard": "ERC20",
+      "usdPrice": 2652,
       "project": {
           "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4YzAyYWFhMzliMjIzZmU4ZDBhMGU1YzRmMjdlYWQ5MDgzYzc1NmNjMl9XRVRI",
           "name": "WETH",
@@ -116,6 +70,7 @@ export const topTokens = [
       "name": "USD Coin",
       "decimals": 6,
       "standard": "ERC20",
+      "usdPrice": 2652,
       "project": {
           "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4YTBiODY5OTFjNjIxOGIzNmMxZDE5ZDRhMmU5ZWIwY2UzNjA2ZWI0OF9VU0RD",
           "name": "USDC",
@@ -139,6 +94,7 @@ export const topTokens = [
       "name": "Tether USD",
       "decimals": 6,
       "standard": "ERC20",
+      "usdPrice": 2652,
       "project": {
           "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4ZGFjMTdmOTU4ZDJlZTUyM2EyMjA2MjA2OTk0NTk3YzEzZDgzMWVjN19UZXRoZXI=",
           "name": "Tether",
