@@ -61,12 +61,12 @@ export default function GetStartedPage() {
       "Addresss is required",
       (value) => value?.length === 42 && ethers.isAddress(value)
     ),
-    title: Yup.string().required("Title is required"),
-    desc: Yup.string().required("Desc is required"),
-    color: Yup.string().required("Desc is required"),
-    logo: Yup.string().test("Logo", "Logo is required", (value: any) =>
-      /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i.test(value)
-    ),
+    // title: Yup.string().required("Title is required"),
+    // desc: Yup.string().required("Desc is required"),
+    // color: Yup.string().required("Desc is required"),
+    // logo: Yup.string().test("Logo", "Logo is required", (value: any) =>
+    //   /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i.test(value)
+    // ),
   };
 
   const fields: IFieldProps[] = [
@@ -78,31 +78,38 @@ export default function GetStartedPage() {
       placeholder: "0x0000000000000000000000000000000000000000",
     },
     {
+      name: "promt_txt",
+      type: "input",
+      label: "Promt text",
+      required: false,
+      placeholder: "Enter promt text",
+    },
+    {
       name: "title",
       type: "input",
       label: "App title",
-      required: true,
+      required: false,
       placeholder: "Enter app title",
     },
-    {
-      name: "desc",
-      type: "input",
-      label: "App description",
-      required: true,
-      placeholder: "Enter app description",
-    },
+    // {
+    //   name: "desc",
+    //   type: "input",
+    //   label: "App description",
+    //   required: false,
+    //   placeholder: "Enter app description",
+    // },
     {
       name: "logo",
       type: "input",
       label: "Brand logo URL",
-      required: true,
+      required: false,
       placeholder: "Enter brand logo URL",
     },
     {
       name: "color",
       type: "color-picker",
       label: "Brand color",
-      required: true,
+      required: false,
     },
   ];
 
